@@ -32,9 +32,12 @@ function benchmark(){
 
 # cf https://stackoverflow.com/questions/10207354/how-to-remove-all-of-the-diacritics-from-a-file
 
+echo "### Lowercase conversion: using awk"
+benchmark "$input" "/dev/null" awk '{print tolower($0)}'
+
+echo "### Lowercase conversion: using sed"
+benchmark "$input" "/dev/null" sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
+
 echo "### Lowercase conversion: using tr"
 benchmark "$input" "/dev/null" tr "[:upper:]" "[:lower:]"
 
-
-echo "### Lowercase conversion: using awk"
-benchmark "$input" "/dev/null" awk '{print tolower($0)}'

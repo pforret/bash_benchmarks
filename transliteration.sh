@@ -22,8 +22,12 @@ function benchmark(){
   done \
   | awk -v bytes_in="$bytes_in" '
   BEGIN {nb=0;msec=0}
-  { nb++; msec+=$2*1000}
+  {
+    nb++;
+    msec+=$2*1000;
+    }
   END {
+    if(msec==0){msec=1}
     printf("* %.0f msec -- %.1f MB/s\n",msec/nb,bytes_in/msec/1000);
     }'
     echo " "
@@ -32,16 +36,8 @@ function benchmark(){
 
 # cf https://stackoverflow.com/questions/10207354/how-to-remove-all-of-the-diacritics-from-a-file
 
-echo "### Text Transliteration: using tr"
-benchmark "$input" "/dev/null" tr \
-  'àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ' \
-  'aaaaaaaaaccceeeeeeeeiiiiiiiilnnooooooooosssuuuuuuuuuuyzzzAAAAAAAAACCCEEEEEEEEIIIIIIIILNNOOOOOOOOOSSSUUUUUUUUUUYZZZ'
-
-echo "### Text Transliteration: using sed"
-benchmark "$input" "/dev/null" sed 'y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/aaaaaaaaaccceeeeeeeeiiiiiiiilnnooooooooosssuuuuuuuuuuyzzzAAAAAAAAACCCEEEEEEEEIIIIIIIILNNOOOOOOOOOSSSUUUUUUUUUUYZZZ/'
-
-echo "### Text Transliteration: using iconv"
-benchmark "$input" "/dev/null" iconv -f utf8 -t ascii//TRANSLIT//IGNORE
+echo "### Text Transliteration: max speed (disk speed)"
+benchmark "$input" "/dev/null" cat
 
 echo "### Text Transliteration: using awk"
 benchmark "$input" "/dev/null" awk '
@@ -71,3 +67,14 @@ benchmark "$input" "/dev/null" awk '
 
     print
     }'
+
+echo "### Text Transliteration: using iconv"
+benchmark "$input" "/dev/null" iconv -f utf8 -t ascii//TRANSLIT//IGNORE
+
+echo "### Text Transliteration: using sed"
+benchmark "$input" "/dev/null" sed 'y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/aaaaaaaaaccceeeeeeeeiiiiiiiilnnooooooooosssuuuuuuuuuuyzzzAAAAAAAAACCCEEEEEEEEIIIIIIIILNNOOOOOOOOOSSSUUUUUUUUUUYZZZ/'
+
+echo "### Text Transliteration: using tr"
+benchmark "$input" "/dev/null" tr \
+  'àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ' \
+  'aaaaaaaaaccceeeeeeeeiiiiiiiilnnooooooooosssuuuuuuuuuuyzzzAAAAAAAAACCCEEEEEEEEIIIIIIIILNNOOOOOOOOOSSSUUUUUUUUUUYZZZ'
