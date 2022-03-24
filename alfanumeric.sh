@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-topic="Lower case conversion"
+topic="Remove non-alphanumeric chars"
 
 input=$TMPDIR/transliteration.input.txt
-echo "> Prepare input file ..."
-LC_ALL=C tr -cd '[:alpha:]' < /dev/urandom | fold -w 2000 | head -n 10000 > "$input"
+echo "> Prepare input file with random chars ..."
+LC_ALL=C tr -cd '[:alnum:]' < /dev/urandom | fold -w 2000 | head -n 10000 > "$input"
 bytes_in=$(du -k "$input" | awk '{print $1*1024}')
 echo "> Input file = $bytes_in bytes ..."
 
-before="UPPER lower Title ÎnTÊrÑatĪÖnÀl"
+before='/Easy like 1-2-3!![]{}()/'
 function benchmark(){
   # $1 = input file
   # $2 = output file
@@ -36,11 +36,9 @@ function benchmark(){
     echo " "
 }
 
-# cf https://stackoverflow.com/questions/10207354/how-to-remove-all-of-the-diacritics-from-a-file
+benchmark "$input" "/dev/null" awk '{gsub(/[^0-9a-zA-Z .-]*/,""); print;}'
 
-benchmark "$input" "/dev/null" awk '{print tolower($0)}'
+benchmark "$input" "/dev/null" sed 's/[^0-9a-zA-Z .-]*//g'
 
-benchmark "$input" "/dev/null" sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
-
-benchmark "$input" "/dev/null" tr "[:upper:]" "[:lower:]"
+benchmark "$input" "/dev/null" tr -cd '[0-9a-zA-Z .-]'
 

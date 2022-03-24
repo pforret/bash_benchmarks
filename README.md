@@ -23,7 +23,7 @@ Benchmarks to test different methods for string, file, process manipulation, ...
 * Example: [Îñtèrńätìõnālísåtįòn] => [Internationalisation]
 * 802 msec -- 5.2 MB/s
 
-# Lowercase conversion
+## [Lowercase conversion](https://github.com/pforret/bash_benchmarks/blob/main/lowercase.sh)
 
 ### Lowercase conversion: using awk
 * Example: [UPPER lower Title ÎnTÊrÑatĪÖnÀl] => [upper lower title întêrñatīönàl]
@@ -36,6 +36,20 @@ Benchmarks to test different methods for string, file, process manipulation, ...
 ### Lowercase conversion: using tr
 * Example: [UPPER lower Title ÎnTÊrÑatĪÖnÀl] => [upper lower title întêrñatīönàl]
 * 800 msec -- 5.3 MB/s
+
+
+## [Remove alphanumeric characters]()
+### Remove non-alphanumeric chars: using `awk`
+* Example: [/Easy like 1-2-3!![]{}()/] => [Easy like 1-2-3]
+* 2820 msec -- 1.5 MB/s
+
+### Remove non-alphanumeric chars: using `sed`
+* Example: [/Easy like 1-2-3!![]{}()/] => [Easy like 1-2-3]
+* 2190 msec -- 1.9 MB/s
+
+### Remove non-alphanumeric chars: using `tr`
+* Example: [/Easy like 1-2-3!![]{}()/] => [/Easy like 123[]/]
+* 790 msec -- 5.3 MB/s
 
 ---
 PS: all these times/speeds were measured on _my_ laptop; a Macbook Pro M1 2021 16". 
