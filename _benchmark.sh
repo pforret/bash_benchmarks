@@ -10,7 +10,7 @@ echo "-----"
 function prep_input(){
   local nb_lines=${1:-5000}
   local nb_chars=${2:-2000}
-  LC_ALL=C tr -cd '[:alnum:]' < /dev/urandom \
+  LC_ALL=C tr -cd '[:alnum:][ ,.]' < /dev/urandom \
   | fold -w "$nb_chars" \
   | head -n "$nb_lines" > "$input"
   bytes_in=$(< "$input" wc -c | awk '{print $0 + 0}')

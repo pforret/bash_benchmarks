@@ -71,6 +71,38 @@ Benchmarks to test different methods for string, file, process manipulation, ...
 * Example: `/Easy like 1-2-3!![]{}()/` => `Easylike123`
 * 392 msec -- 5.1 MB/s
 
+
+## Trim spaces
+
+### Trim leading and trailing spaces: using `awk`
+* Command: `awk {sub(/^[ \t\r\n]+/, ""); sub(/[ \t\r\n]+$/, ""); print}`
+* Example: `    Just a Test          ` => `Just a Test`
+* **50 msec -- 79.6 MB/s**
+
+### Trim leading and trailing spaces: using `sed`
+* Command: `sed -e s/^[[:space:]]*// -e s/[[:space:]]*$//`
+* Example: `    Just a Test          ` => `Just a Test`
+* 350 msec -- 11.4 MB/s
+
+### Trim leading and trailing spaces: using `xargs`
+* Command: `xargs`
+* Example: `    Just a Test          ` => `Just a Test`
+* 946 msec -- 4.2 MB/s
+
+
+## Cut first N chars
+
+### Cut first 20 chars: using `awk`
+* Command: `awk {print substr($0,1,20)}`
+* Example: `0123456789012345678901234567890123456789` => `01234567890123456789`
+* **160 msec -- 125.1 MB/s**
+
+### Cut first 20 chars: using `cut`
+* Command: `cut -c1-20`
+* Example: `0123456789012345678901234567890123456789` => `01234567890123456789`
+* 2082 msec -- 9.6 MB/s
+
+
 ---
 PS: all these times/speeds were measured on _my_ laptop; a Macbook Pro M1 2021 16". 
 The absolute speed on your machine for these scripts might be different, 
