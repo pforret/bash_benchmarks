@@ -36,26 +36,26 @@ Result: 'Îñtérńåtîônâl' => 'International'
 
 ## [Lowercase conversion](https://github.com/pforret/bash_benchmarks/blob/main/lowercase.sh)
 
-### Remove non-alphanumeric chars: using `awk`
+### Convert to lowercase: using `awk`
 ```
 Command: 'awk {print tolower($0)}'
-Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
+Result: '/UPPER lower Title ÎÑ áçtîÔŃ/' => '/upper lower title îñ áçtîôń/'
 ```
-* 88 msec -- 22.7 MB/s
+* 80 msec -- 25.0 MB/s
 
-### Remove non-alphanumeric chars: using `sed`
+### Convert to lowercase: using `sed`
 ```
 Command: 'sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏ...'
-Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
+Result: '/UPPER lower Title ÎÑ áçtîÔŃ/' => '/upper lower title îñ áçtîôń/'
 ```
 * **30 msec -- 66.7 MB/s**
 
-### Remove non-alphanumeric chars: using `tr`
+### Convert to lowercase: using `tr`
 ```
 Command: 'tr [:upper:] [:lower:]'
-Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
+Result: '/UPPER lower Title ÎÑ áçtîÔŃ/' => '/upper lower title îñ áçtîôń/'
 ```
-* 412 msec -- 4.9 MB/s
+* 400 msec -- 5.0 MB/s
 
 
 ## [Remove alphanumeric characters]()

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 . _benchmark.sh
 
-topic="Remove non-alphanumeric chars"
-before='/Easy like 1-2-3!![]{}()/'
+topic="Convert to lowercase"
+before='/UPPER lower Title ÎÑ áçtîÔŃ/'
 
 prep_input 5000 2000
 
