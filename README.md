@@ -24,7 +24,7 @@ Result: 'Îñtérńåtîônâl' => '^I~nt'er'nat^i^on^al'
 Command: 'sed y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿ...'
 Result: 'Îñtérńåtîônâl' => 'International'
 ```
-* 30 msec -- 66.7 MB/s
+* **30 msec -- 66.7 MB/s**
 
 ### Transliteration (remove accents): using `tr`
 ```
@@ -48,7 +48,7 @@ Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
 Command: 'sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏ...'
 Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
 ```
-* 30 msec -- 66.7 MB/s
+* **30 msec -- 66.7 MB/s**
 
 ### Remove non-alphanumeric chars: using `tr`
 ```
