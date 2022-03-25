@@ -19,9 +19,11 @@ function prep_input(){
 function benchmark(){
   echo "### $topic: using \`$1\`"
   local full_command
-  full_command=$(echo "$*" | tr "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>99) {print substr($0,1,98) "..."} else {print} }')
-  echo "* Command: \`$full_command\`"
-  echo "* Example: \`$before\` => \`$(echo "$before" | "$@")\`"
+  full_command=$(echo "$*" | tr "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
+  echo '```'
+  echo "Command: '$full_command'"
+  echo "Result: '$before' => '$(echo "$before" | "$@")'"
+  echo '```'
   for (( i = 0; i < 5; i++ )); do
     < "$input" /usr/bin/time -p "$@" 2>&1 > "$output" | grep real
   done \

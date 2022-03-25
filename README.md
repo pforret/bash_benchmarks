@@ -93,14 +93,18 @@ Benchmarks to test different methods for string, file, process manipulation, ...
 ## Cut first N chars
 
 ### Cut first 20 chars: using `awk`
-* Command: `awk {print substr($0,1,20)}`
-* Example: `0123456789012345678901234567890123456789` => `01234567890123456789`
+```
+Command: 'awk {print substr($0,1,20)}'
+Result: '0123456789012345678901234567890123456789' => '01234567890123456789'
+```
 * **160 msec -- 125.1 MB/s**
 
 ### Cut first 20 chars: using `cut`
-* Command: `cut -c1-20`
-* Example: `0123456789012345678901234567890123456789` => `01234567890123456789`
-* 2082 msec -- 9.6 MB/s
+```
+Command: 'cut -c1-20'
+Result: '0123456789012345678901234567890123456789' => '01234567890123456789'
+```
+* 2080 msec -- 9.6 MB/s
 
 
 ---
