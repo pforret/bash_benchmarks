@@ -3,53 +3,73 @@ Benchmarks to test different methods for string, file, process manipulation, ...
 
 ## [Transliteration](https://github.com/pforret/bash_benchmarks/blob/main/transliteration.sh)
 
-> i.e. removing diacritics [îñtërńåtîõnāl] => [international]
-> 
 > inspired by [stackoverflow.com/questions/10207354/how-to-remove-all-of-the-diacritics-from-a-file](https://stackoverflow.com/questions/10207354/how-to-remove-all-of-the-diacritics-from-a-file)
 
-### Text Transliteration: using awk
-* Example: [Îñtèrńätìõnālísåtįòn] => [Internationalisation]
-* 270 msec -- 15.6 MB/s
+### Transliteration (remove accents): using `awk`
+* Command: `awk { gsub(/[àáâäæãåāǎ]/,"a"); gsub(/[çćč]/,"c"); gsub(/[èéêëēėęě]/,"e"); gsub(/[îïííīįìǐ]/,"i"); ...`
+* Example: `Îñtérńåtîônâl` => `International`
+* 130 msec -- 15.4 MB/s
 
-### Text Transliteration: using iconv
-* Example: [Îñtèrńätìõnālísåtįòn] => [^I~nt`er'n"at`i~onal'isati`on]
-* 130 msec -- 32.4 MB/s
+### Transliteration (remove accents): using `iconv`
+* Command: `iconv -f utf8 -t ascii//TRANSLIT//IGNORE`
+* Example: `Îñtérńåtîônâl` => `^I~nt'er'nat^i^on^al`
+* 60 msec -- 33.4 MB/s
 
-### Text Transliteration: using sed
-* Example: [Îñtèrńätìõnālísåtįòn] => [Internationalisation]
-* 70 msec -- 60.1 MB/s
+### Transliteration (remove accents): using `sed`
+* Command: `sed y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓ...`
+* Example: `Îñtérńåtîônâl` => `International`
+* **30 msec -- 66.7 MB/s**
 
-### Text Transliteration: using tr
-* Example: [Îñtèrńätìõnālísåtįòn] => [Internationalisation]
-* 802 msec -- 5.2 MB/s
+### Transliteration (remove accents): using `tr`
+* Command: `tr àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌ...`
+* Example: `Îñtérńåtîônâl` => `International`
+* 400 msec -- 5.0 MB/s
+
 
 ## [Lowercase conversion](https://github.com/pforret/bash_benchmarks/blob/main/lowercase.sh)
 
-### Lowercase conversion: using awk
-* Example: [UPPER lower Title ÎnTÊrÑatĪÖnÀl] => [upper lower title întêrñatīönàl]
-* 190 msec -- 22.1 MB/s
+### Remove non-alphanumeric chars: using `awk`
+* Command: `awk {print tolower($0)}`
+* Example: `/Easy like 1-2-3!![]{}()/` => `/easy like 1-2-3!![]{}()/`
+* 90 msec -- 22.2 MB/s
 
-### Lowercase conversion: using sed
-* Example: [UPPER lower Title ÎnTÊrÑatĪÖnÀl] => [upper lower title întêrñatīönàl]
-* 70 msec -- 60.1 MB/s
+### Remove non-alphanumeric chars: using `sed`
+* Command: `sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefgh...`
+* Example: `/Easy like 1-2-3!![]{}()/` => `/easy like 1-2-3!![]{}()/`
+* **30 msec -- 66.7 MB/s**
 
-### Lowercase conversion: using tr
-* Example: [UPPER lower Title ÎnTÊrÑatĪÖnÀl] => [upper lower title întêrñatīönàl]
-* 800 msec -- 5.3 MB/s
+### Remove non-alphanumeric chars: using `tr`
+* Command: `tr [:upper:] [:lower:]`
+* Example: `/Easy like 1-2-3!![]{}()/` => `/easy like 1-2-3!![]{}()/`
+* 404 msec -- 5.0 MB/s
 
 
 ## [Remove alphanumeric characters]()
+
 ### Remove non-alphanumeric chars: using `awk`
-* Example: [/Easy like 1-2-3!![]{}()/] => [Easy like 1-2-3]
-* 2820 msec -- 1.5 MB/s
+* Command: `awk {gsub(/[^0-9a-zA-Z .-]*/,""); print;}`
+* Example: `/Easy like 1-2-3!![]{}()/` => `Easy like 1-2-3`
+* 1410 msec -- 1.4 MB/s
 
 ### Remove non-alphanumeric chars: using `sed`
-* Example: [/Easy like 1-2-3!![]{}()/] => [Easy like 1-2-3]
-* 2190 msec -- 1.9 MB/s
+* Command: `sed s/[^0-9a-zA-Z .-]*//g`
+* Example: `/Easy like 1-2-3!![]{}()/` => `Easy like 1-2-3`
+* 1092 msec -- 1.8 MB/s
+
+### Remove non-alphanumeric chars: using `sed`
+* Command: `sed s/[^0-9a-zA-Z .-]//g`
+* Example: `/Easy like 1-2-3!![]{}()/` => `Easy like 1-2-3`
+* **212 msec -- 9.4 MB/s**
 
 ### Remove non-alphanumeric chars: using `tr`
-* Example: [/Easy like 1-2-3!![]{}()/] => [/Easy like 123[]/]
-* 790 msec -- 5.3 MB/s
+* Command: `tr -cd [0-9a-zA-Z .-]`
+* Example: `/Easy like 1-2-3!![]{}()/` => `/Easy like 123[]/`
+* 394 msec -- 5.1 MB/s
+
+### Remove non-alphanumeric chars: using `tr`
+* Command: `tr -cd [:alnum:]`
+* Example: `/Easy like 1-2-3!![]{}()/` => `Easylike123`
+* 392 msec -- 5.1 MB/s
 
 ---
 PS: all these times/speeds were measured on _my_ laptop; a Macbook Pro M1 2021 16". 
