@@ -6,42 +6,56 @@ Benchmarks to test different methods for string, file, process manipulation, ...
 > inspired by [stackoverflow.com/questions/10207354/how-to-remove-all-of-the-diacritics-from-a-file](https://stackoverflow.com/questions/10207354/how-to-remove-all-of-the-diacritics-from-a-file)
 
 ### Transliteration (remove accents): using `awk`
-* Command: `awk { gsub(/[àáâäæãåāǎ]/,"a"); gsub(/[çćč]/,"c"); gsub(/[èéêëēėęě]/,"e"); gsub(/[îïííīįìǐ]/,"i"); ...`
-* Example: `Îñtérńåtîônâl` => `International`
+```
+Command: 'awk { gsub(/[àáâäæãåāǎ]/,"a"); gsub(/[çćč]/,"c"); gsub(/[èéê...'
+Result: 'Îñtérńåtîônâl' => 'International'
+```
 * 130 msec -- 15.4 MB/s
 
 ### Transliteration (remove accents): using `iconv`
-* Command: `iconv -f utf8 -t ascii//TRANSLIT//IGNORE`
-* Example: `Îñtérńåtîônâl` => `^I~nt'er'nat^i^on^al`
+```
+Command: 'iconv -f utf8 -t ascii//TRANSLIT//IGNORE'
+Result: 'Îñtérńåtîônâl' => '^I~nt'er'nat^i^on^al'
+```
 * 60 msec -- 33.4 MB/s
 
 ### Transliteration (remove accents): using `sed`
-* Command: `sed y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓ...`
-* Example: `Îñtérńåtîônâl` => `International`
-* **30 msec -- 66.7 MB/s**
+```
+Command: 'sed y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿ...'
+Result: 'Îñtérńåtîônâl' => 'International'
+```
+* 30 msec -- 66.7 MB/s
 
 ### Transliteration (remove accents): using `tr`
-* Command: `tr àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌ...`
-* Example: `Îñtérńåtîônâl` => `International`
+```
+Command: 'tr àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż...'
+Result: 'Îñtérńåtîônâl' => 'International'
+```
 * 400 msec -- 5.0 MB/s
 
 
 ## [Lowercase conversion](https://github.com/pforret/bash_benchmarks/blob/main/lowercase.sh)
 
 ### Remove non-alphanumeric chars: using `awk`
-* Command: `awk {print tolower($0)}`
-* Example: `/Easy like 1-2-3!![]{}()/` => `/easy like 1-2-3!![]{}()/`
-* 90 msec -- 22.2 MB/s
+```
+Command: 'awk {print tolower($0)}'
+Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
+```
+* 88 msec -- 22.7 MB/s
 
 ### Remove non-alphanumeric chars: using `sed`
-* Command: `sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefgh...`
-* Example: `/Easy like 1-2-3!![]{}()/` => `/easy like 1-2-3!![]{}()/`
-* **30 msec -- 66.7 MB/s**
+```
+Command: 'sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏ...'
+Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
+```
+* 30 msec -- 66.7 MB/s
 
 ### Remove non-alphanumeric chars: using `tr`
-* Command: `tr [:upper:] [:lower:]`
-* Example: `/Easy like 1-2-3!![]{}()/` => `/easy like 1-2-3!![]{}()/`
-* 404 msec -- 5.0 MB/s
+```
+Command: 'tr [:upper:] [:lower:]'
+Result: '/Easy like 1-2-3!![]{}()/' => '/easy like 1-2-3!![]{}()/'
+```
+* 412 msec -- 4.9 MB/s
 
 
 ## [Remove alphanumeric characters]()
