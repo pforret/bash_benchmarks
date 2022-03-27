@@ -126,14 +126,21 @@ Result: '    Just a Test          ' => 'Just a Test'
 Command: 'awk {print substr($0,1,20)}'
 Result: '0123456789012345678901234567890123456789' => '01234567890123456789'
 ```
-* **160 msec -- 125.1 MB/s**
+* **80 msec -- 125.1 MB/s**
 
 ### Cut first 20 chars: using `cut`
 ```
 Command: 'cut -c1-20'
 Result: '0123456789012345678901234567890123456789' => '01234567890123456789'
 ```
-* 2080 msec -- 9.6 MB/s
+* 1040 msec -- 9.6 MB/s
+
+### Cut first 20 chars: using `bash`
+```
+Command: 'bash -c while read line ; do echo ${line:0:20} ; done'
+Result: '0123456789012345678901234567890123456789' => '01234567890123456789'
+```
+* 796 msec -- 12.6 MB/s
 
 
 ---
