@@ -12,3 +12,5 @@ benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖ�
 
 benchmark tr "[:upper:]" "[:lower:]"
 
+benchmark bash -c "while read line ; do echo \${line,,} ; done"
+
