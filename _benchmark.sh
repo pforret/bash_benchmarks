@@ -54,7 +54,7 @@ function benchmark(){
 
     ## now test invocation speed
     echo -n "* Invocation speed: "
-    local nb_invocations=1200
+    local nb_invocations=2000
     local line
     t0=$SECONDS
     < "$input" head -$nb_invocations \
@@ -63,7 +63,7 @@ function benchmark(){
       done
       t1=$SECONDS
 
-    <<< "$t0 $t1" awk -v nb=$nb_invocations '{printf("`%0.2f msec/op`\n\n",($2 - $1)*1000/nb); }'
+    <<< "$t0 $t1" awk -v nb=$nb_invocations '{printf("`%.0f ops/sec`\n\n",nb/($2 - $1)); }'
 
     ) | tee -a "$output_doc"
 
