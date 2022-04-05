@@ -2,7 +2,6 @@
 . _benchmark.sh
 
 topic="Convert to lowercase"
-before='/UPPER lower Title ÎÑ áçtîÔŃ/'
 
 prep_input 5000 2000
 

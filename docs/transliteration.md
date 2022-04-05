@@ -1,32 +1,36 @@
 # Transliteration (remove accents)
  
-> run at Sun Mar 27 19:22:16 CEST 2022 on Darwin 21.4.0
+> run at Tue Apr  5 23:27:53 CEST 2022 on Darwin 21.4.0
  
 ### Transliteration (remove accents): using `awk`
 ```
 Command: 'awk { gsub(/[àáâäæãåāǎ]/,"a"); gsub(/[çćč]/,"c"); gsub(/[èéê...'
-Result: 'Îñtérńåtîônâl' => 'International'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  InterNaTIONaЛ Tεχt [is]: excıΤΙNĞ¡!  '
 ```
-* 130 msec -- 15.4 MB/s
- 
+* Throughput speed: `15.4 MB/s`
+* Invocation speed: `4.17 msec/op`
+
 ### Transliteration (remove accents): using `iconv`
 ```
 Command: 'iconv -f utf8 -t ascii//TRANSLIT//IGNORE'
-Result: 'Îñtérńåtîônâl' => '^I~nt'er'nat^i^on^al'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  ^I'nt'erN"aT`I~ON~a Tt [is]: exciNG!!  '
 ```
-* 60 msec -- 33.4 MB/s
- 
+* Throughput speed: `33.4 MB/s`
+* Invocation speed: `1.67 msec/op`
+
 ### Transliteration (remove accents): using `sed`
 ```
 Command: 'sed y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿ...'
-Result: 'Îñtérńåtîônâl' => 'International'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  InterNaTIONaЛ Tεχt [is]: excıΤΙNĞ¡!  '
 ```
-* 30 msec -- 66.7 MB/s
- 
+* Throughput speed: `66.7 MB/s`
+* Invocation speed: `1.67 msec/op`
+
 ### Transliteration (remove accents): using `tr`
 ```
 Command: 'tr àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż...'
-Result: 'Îñtérńåtîônâl' => 'International'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  InterNaTIONaЛ Tεχt [is]: excıΤΙNĞ¡!  '
 ```
-* 400 msec -- 5.0 MB/s
- 
+* Throughput speed: `5.0 MB/s`
+* Invocation speed: `1.67 msec/op`
+

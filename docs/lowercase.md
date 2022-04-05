@@ -1,32 +1,36 @@
 # Convert to lowercase
  
-> run at Tue Mar 29 14:44:21 CEST 2022 on Darwin 21.4.0
+> run at Tue Apr  5 23:27:08 CEST 2022 on Darwin 21.4.0
  
 ### Convert to lowercase: using `awk`
 ```
 Command: 'awk {print tolower($0)}'
-Result: '/UPPER lower Title ÎÑ áçtîÔŃ/' => '/upper lower title îñ áçtîôń/'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  îńtérnätìõnãл tεχt [is]: excıτιnğ¡!  '
 ```
-* 90 msec -- 22.2 MB/s
- 
+* Throughput speed: `23.8 MB/s`
+* Invocation speed: `4.17 msec/op`
+
 ### Convert to lowercase: using `sed`
 ```
 Command: 'sed y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏ...'
-Result: '/UPPER lower Title ÎÑ áçtîÔŃ/' => '/upper lower title îñ áçtîôń/'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  îńtérnätìõnãЛ tεχt [is]: excıΤΙnĞ¡!  '
 ```
-* 32 msec -- 62.5 MB/s
- 
+* Throughput speed: `66.7 MB/s`
+* Invocation speed: `1.67 msec/op`
+
 ### Convert to lowercase: using `tr`
 ```
 Command: 'tr [:upper:] [:lower:]'
-Result: '/UPPER lower Title ÎÑ áçtîÔŃ/' => '/upper lower title îñ áçtîôń/'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  îńtérnätìõnãл tεχt [is]: excıτιnğ¡!  '
 ```
-* 410 msec -- 4.9 MB/s
- 
+* Throughput speed: `5.0 MB/s`
+* Invocation speed: `1.67 msec/op`
+
 ### Convert to lowercase: using `bash`
 ```
 Command: 'bash -c while read line ; do echo ${line,,} ; done'
-Result: '/UPPER lower Title ÎÑ áçtîÔŃ/' => '/upper lower title îñ áçtîôń/'
+Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => 'îńtérnätìõnãл tεχt [is]: excıτιnğ¡!'
 ```
-* 1030 msec -- 1.9 MB/s
- 
+* Throughput speed: `1.9 MB/s`
+* Invocation speed: `3.33 msec/op`
+

@@ -2,7 +2,6 @@
 . _benchmark.sh
 
 topic="Remove non-alphanumeric chars"
-before='/Easy like 1-2-3!![]{}()/'
 
 prep_input 5000 1000
 
