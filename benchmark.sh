@@ -28,7 +28,7 @@ option|t|tmp_dir|folder for temp files|/tmp/$script_prefix
 option|b|before|text to transform|  [ÎńtérNäTÌÕNãl] 'like' Eλλη
 option|o|out_dir|folder for output reports|docs
 option|i|in_file|input file (generated before the benchmark)|$script_prefix.input.txt
-choice|1|action|action to perform|alpha,uppercase,lowercase,romanize,slugify,trim,check,env,update
+choice|1|action|action to perform|alpha,chars,lowercase,romanize,slugify,trim,uppercase,check,env,update
 " | grep -v '^#' | grep -v '^\s*$'
 }
 
@@ -80,6 +80,17 @@ main() {
     benchmark awk '{sub(/^[ \t\r\n]+/, ""); sub(/[ \t\r\n]+$/, ""); print}'
     benchmark sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
     benchmark xargs
+    ;;
+
+  chars)
+    #TIP: use «$script_prefix lowercase» to ...
+    topic="cur the first 20 characters of each line"
+    prep_input "$input"
+    before="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+    print_header "$action" "$output_doc"
+    benchmark awk '{print substr($0,1,20)}'
+    benchmark cut -c1-20
+    benchmark '${line:0:20}'
     ;;
 
   alpha)
