@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-. _benchmark.sh
-
-topic="Convert to lowercase"
+. ../_benchmark.shtopic="Convert to lowercase"
 
 prep_input 5000 2000
 

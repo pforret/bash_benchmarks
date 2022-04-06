@@ -1,19 +1,19 @@
 # Transliteration (remove accents)
  
-> run at Tue Apr  5 23:44:24 CEST 2022 on Darwin 21.4.0
+> run at Thu Apr  7 00:38:14 CEST 2022 on Darwin 21.4.0
  
 ### Transliteration (remove accents): using `awk`
 ```
 Command: 'awk { gsub(/[àáâäæãåāǎ]/,"a"); gsub(/[çćč]/,"c"); gsub(/[èéê...'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  InterNaTIONaЛ Tεχt [is]: excıΤΙNĞ¡!  '
+Result: '  ÎńtérNäTÌÕNãЛ like Ελληνική Россия մայր  ' => '  InterNaTIONaЛ like Ελληνική Россия մայր  '
 ```
 * Throughput speed: `15.4 MB/s`
-* Invocation speed: `200 ops/sec`
+* Invocation speed: `250 ops/sec`
 
 ### Transliteration (remove accents): using `iconv`
 ```
 Command: 'iconv -f utf8 -t ascii//TRANSLIT//IGNORE'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  ^I'nt'erN"aT`I~ON~a Tt [is]: exciNG!!  '
+Result: '  ÎńtérNäTÌÕNãЛ like Ελληνική Россия մայր  ' => '  ^I'nt'erN"aT`I~ON~a like     '
 ```
 * Throughput speed: `33.4 MB/s`
 * Invocation speed: `500 ops/sec`
@@ -21,7 +21,7 @@ Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  ^I'nt'erN
 ### Transliteration (remove accents): using `sed`
 ```
 Command: 'sed y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿ...'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  InterNaTIONaЛ Tεχt [is]: excıΤΙNĞ¡!  '
+Result: '  ÎńtérNäTÌÕNãЛ like Ελληνική Россия մայր  ' => '  InterNaTIONaЛ like Ελληνική Россия մայր  '
 ```
 * Throughput speed: `66.7 MB/s`
 * Invocation speed: `500 ops/sec`
@@ -29,8 +29,8 @@ Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  InterNaTI
 ### Transliteration (remove accents): using `tr`
 ```
 Command: 'tr àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż...'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  InterNaTIONaЛ Tεχt [is]: excıΤΙNĞ¡!  '
+Result: '  ÎńtérNäTÌÕNãЛ like Ελληνική Россия մայր  ' => '  InterNaTIONaЛ like Ελληνική Россия մայր  '
 ```
 * Throughput speed: `5.0 MB/s`
-* Invocation speed: `667 ops/sec`
+* Invocation speed: `500 ops/sec`
 

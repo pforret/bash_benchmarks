@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-. _benchmark.sh
-
-topic="Romanisation (remove accents)"
+. ../_benchmark.shtopic="Transliteration (remove accents)"
 
 prep_input 5000 2000
 
@@ -9,11 +7,10 @@ prep_input 5000 2000
 
 benchmark awk '
   {
-    gsub(/[àáâäæãåāǎα]/,"a");
-    gsub(/[β]/,"b");
+    gsub(/[àáâäæãåāǎ]/,"a");
     gsub(/[çćč]/,"c");
-    gsub(/[èéêëēėęěεη]/,"e");
-    gsub(/[îïííīįìǐι]/,"i");
+    gsub(/[èéêëēėęě]/,"e");
+    gsub(/[îïííīįìǐ]/,"i");
     gsub(/[ł]/,"l");
     gsub(/[ñń]/,"n");
     gsub(/[ôöòóœøōǒõ]/,"o");

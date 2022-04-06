@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 script_name=$(basename "$0" .sh)
-temp_dir="${$TMPDIR:-/tmp}/bash_benchmarks"
+temp_dir="${TMPDIR:-/tmp}/bash_benchmarks"
 [[ ! -d "$temp_dir" ]] && mkdir -p "$temp_dir"
 input="$temp_dir/$script_name.input.txt"
 

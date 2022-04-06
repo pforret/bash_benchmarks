@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-. _benchmark.sh
-
-topic="Convert to uppercase"
+. ../_benchmark.shtopic="Convert to uppercase"
 
 prep_input 5000 2000
 

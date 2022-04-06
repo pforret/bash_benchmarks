@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-./alfanumeric.sh
-./benchmark lowercase
-./benchmark uppercase
-./romanisation.sh
-./slugify.sh
-./transliteration.sh
-./trim.sh
+./benchmark.sh alpha
+./benchmark.sh lowercase
+./benchmark.sh romanize
+./benchmark.sh slugify
+./benchmark.sh trim
+./benchmark.sh uppercase

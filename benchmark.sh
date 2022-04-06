@@ -25,10 +25,10 @@ flag|v|verbose|output more
 flag|f|force|do not ask for confirmation (always yes)
 option|l|log_dir|folder for log files |$HOME/log/$script_prefix
 option|t|tmp_dir|folder for temp files|/tmp/$script_prefix
-option|b|before|text to transform|  [ÎńtérNäTÌÕNãl] 'like' Eλλη [](){}/.:^
+option|b|before|text to transform|  [ÎńtérNäTÌÕNãl] 'like' Eλλη
 option|o|out_dir|folder for output reports|docs
 option|i|in_file|input file (generated before the benchmark)|$script_prefix.input.txt
-choice|1|action|action to perform|uppercase,lowercase,romanize,check,env,update
+choice|1|action|action to perform|alpha,uppercase,lowercase,romanize,slugify,trim,check,env,update
 " | grep -v '^#' | grep -v '^\s*$'
 }
 
@@ -50,6 +50,7 @@ main() {
     #TIP: use «$script_prefix uppercase» to ...
     topic="Convert text to uppercase"
     prep_input "$input"
+    before="łorèm îpsùm dôlõr sit amét"
     print_header "$action" "$output_doc"
     benchmark awk '{print toupper($0)}'
     benchmark sed 'y/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/'
@@ -62,6 +63,7 @@ main() {
     #TIP: use «$script_prefix lowercase» to ...
     topic="Convert text to lowercase"
     prep_input "$input"
+    before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT"
     print_header "$action" "$output_doc"
     benchmark awk '{print tolower($0)}'
     benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
@@ -69,26 +71,71 @@ main() {
     benchmark '${line,,}'
     ;;
 
+  trim)
+    #TIP: use «$script_prefix lowercase» to ...
+    topic="Trim leading and trailing space"
+    prep_input "$input"
+    before="    ( Lorem ipsum dolor sit amet )   "
+    print_header "$action" "$output_doc"
+    benchmark awk '{sub(/^[ \t\r\n]+/, ""); sub(/[ \t\r\n]+$/, ""); print}'
+    benchmark sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+    benchmark xargs
+    ;;
+
+  alpha)
+    #TIP: use «$script_prefix lowercase» to ...
+    topic="remove non-alphanumeric characters"
+    prep_input "$input"
+    before="^1-2'3,4,5_6°8@9&0 (one){two}[three]"
+    print_header "$action" "$output_doc"
+    benchmark awk '{gsub(/[^0-9a-zA-Z .-]*/,""); print;}'
+    benchmark sed 's/[^0-9a-zA-Z .-]*//g'
+    benchmark sed 's/[^0-9a-zA-Z .-]//g'
+    benchmark tr -cd '0-9a-zA-Z .-'
+    benchmark tr -cd '[:alnum:][:blank:].-'
+    ;;
+
   romanize)
     #TIP: use «$script_prefix romanize» to ...
     topic="Convert text to latin alphabet"
     prep_input "$input"
+    before="ŁORÈM ÎPSÙM dôlõr sit amét"
     print_header "$action" "$output_doc"
     benchmark awk '{
-      gsub(/[ğ]/,""); gsub(/[ÀÁÂÄÅĀĂĄΑ]/,"A"); gsub(/[Æ]/,"AE"); gsub(/[ÇČ]/,"C"); gsub(/[ČΧ]/,"CH"); gsub(/[ÐĎΔ]/,"D");
-      gsub(/[ÈÉÊËĒĖĘĚΕΗ]/,"E"); gsub(/[ĢΓ]/,"G"); gsub(/[ÍÎĪĮΙ]/,"I"); gsub(/[ĶΚ]/,"K"); gsub(/[ĻΛ]/,"L"); gsub(/[Μ]/,"M");
-      gsub(/[ÑŅŇΝ]/,"N"); gsub(/[ÓÔÖΟΩ]/,"O"); gsub(/[ØŒ]/,"OE"); gsub(/[Π]/,"P"); gsub(/[Φ]/,"PH"); gsub(/[Ψ]/,"PS");
-      gsub(/[ŘΡ]/,"R"); gsub(/[ŠΣ]/,"S"); gsub(/[ŠȘ]/,"SH"); gsub(/[ẞ]/,"SS"); gsub(/[ŤΤ]/,"T"); gsub(/[ÞΘ]/,"TH");
-      gsub(/[Ț]/,"TS"); gsub(/[ÙÚÛÜŪŮŲ]/,"U"); gsub(/[Β]/,"V"); gsub(/[Ξ]/,"X"); gsub(/[ÝŸ]/,"Y"); gsub(/[ŽΖ]/,"Z");
-      gsub(/[Ž]/,"ZH"); gsub(/[àáâäåāăąα]/,"a"); gsub(/[æ]/,"ae"); gsub(/[çćč]/,"c"); gsub(/[čχ]/,"ch"); gsub(/[ðďđδ]/,"d");
-      gsub(/[èéêëēėęěεη]/,"e"); gsub(/[ģγ]/,"g"); gsub(/[íîīįıι]/,"i"); gsub(/[ķκ]/,"k"); gsub(/[ĺļľłλ]/,"l"); gsub(/[μ]/,"m");
-      gsub(/[ñńņňν]/,"n"); gsub(/[óôöοω]/,"o"); gsub(/[øœ]/,"oe"); gsub(/[π]/,"p"); gsub(/[φ]/,"ph"); gsub(/[ψ]/,"ps");
-      gsub(/[ŕřρ]/,"r"); gsub(/[śšσ]/,"s"); gsub(/[şšș]/,"sh"); gsub(/[ß]/,"ss"); gsub(/[ťτ]/,"t"); gsub(/[þθ]/,"th");
-      gsub(/[čț]/,"ts"); gsub(/[ùúûüūůų]/,"u"); gsub(/[β]/,"v"); gsub(/[ξ]/,"x"); gsub(/[üýÿ]/,"y"); gsub(/[źżžζ]/,"z"); gsub(/[ž]/,"zh");
+      gsub(/[ğ]/,""); gsub(/[ÀÁÂÃÄÅĀĂĄǍ]/,"A"); gsub(/[Æ]/,"AE"); gsub(/[ÇĆČ]/,"C"); gsub(/[Č]/,"CH"); gsub(/[ÐĎ]/,"D");
+      gsub(/[ÈÉÊËĒĖĘĚ]/,"E"); gsub(/[Ģ]/,"G"); gsub(/[ÌÍÎÏĪĮǏ]/,"I"); gsub(/[Ķ]/,"K"); gsub(/[ĻŁ]/,"L"); gsub(/[ÑŅŇ]/,"N");
+      gsub(/[ÒÓÔÕÖØŌǑ]/,"O"); gsub(/[ØŒ]/,"OE"); gsub(/[Ř]/,"R"); gsub(/[Š]/,"S"); gsub(/[ŠȘ]/,"SH"); gsub(/[ẞ]/,"SS");
+      gsub(/[Ť]/,"T"); gsub(/[Þ]/,"TH"); gsub(/[Ț]/,"TS"); gsub(/[ÙÚÛÜŪŮŲǓǕǗǙǛ]/,"U"); gsub(/[ÝŸ]/,"Y"); gsub(/[ŹŻŽ]/,"Z");
+      gsub(/[Ž]/,"ZH"); gsub(/[àáâãäåāăąǎ]/,"a"); gsub(/[æ]/,"ae"); gsub(/[çćč]/,"c"); gsub(/[č]/,"ch"); gsub(/[ðďđ]/,"d");
+      gsub(/[èéêëēėęě]/,"e"); gsub(/[ģ]/,"g"); gsub(/[ìíîïīįıǐ]/,"i"); gsub(/[ķ]/,"k"); gsub(/[ĺļľł]/,"l"); gsub(/[ñńņň]/,"n");
+      gsub(/[òóôõöøōǒ]/,"o"); gsub(/[øœ]/,"oe"); gsub(/[ŕř]/,"r"); gsub(/[śš]/,"s"); gsub(/[şšș]/,"sh"); gsub(/[ß]/,"ss");
+      gsub(/[ť]/,"t"); gsub(/[þ]/,"th"); gsub(/[čț]/,"ts"); gsub(/[ùúûüūůųǔǖǘǚǜ]/,"u"); gsub(/[üýÿ]/,"y"); gsub(/[źżž]/,"z");
+      gsub(/[ž]/,"zh"); print $0; }'
+
+    from="ÄÀÂÁÅĂÃĀǍĄÇĆČÐĎÉÈÊËĒĖĘĚĢÍÎÏĪĮÌǏĶŁĻÑŅŇÖÔÓÒØŌǑÕŘŠŤÜÙÛÚǓǕǗǙǛŪŲŮŸÝŽŹŻäàâáåąăãāǎçćčđðďéèêëęēėěģíîïīįìǐıķłļĺľñńņňöôóòøōǒõŕřšśťüùûúǔǖǘǚǜūųůÿýüžźż"
+    to="AAAAAAAAAACCCDDEEEEEEEEGIIIIIIIKLLNNNOOOOOOOORSTUUUUUUUUUUUUYYZZZaaaaaaaaaacccdddeeeeeeeegiiiiiiiikllllnnnnoooooooorrsstuuuuuuuuuuuuyyyzzz"
+    benchmark sed "y/$from/$to/"
+    benchmark tr "$from" "$to"
+    ;;
+
+  slugify)
+    #TIP: use «$script_prefix romanize» to ...
+    topic="Convert text to a slug"
+    prep_input "$input"
+    before="(Demain, dès l'aube)"
+    print_header "$action" "$output_doc"
+    benchmark awk '{
+      $0=tolower($0);
+      gsub(/[àáâãäåāăąǎ]/,"a"); gsub(/[æ]/,"ae"); gsub(/[çćč]/,"c"); gsub(/[č]/,"ch"); gsub(/[ðďđ]/,"d");
+      gsub(/[èéêëēėęě]/,"e"); gsub(/[ģ]/,"g"); gsub(/[ìíîïīįıǐ]/,"i"); gsub(/[ķ]/,"k"); gsub(/[ĺļľł]/,"l"); gsub(/[ñńņň]/,"n");
+      gsub(/[òóôõöøōǒ]/,"o"); gsub(/[øœ]/,"oe"); gsub(/[ŕř]/,"r"); gsub(/[śš]/,"s"); gsub(/[şšș]/,"sh"); gsub(/[ß]/,"ss");
+      gsub(/[ť]/,"t"); gsub(/[þ]/,"th"); gsub(/[čț]/,"ts"); gsub(/[ùúûüūůųǔǖǘǚǜ]/,"u"); gsub(/[üýÿ]/,"y"); gsub(/[źżž]/,"z");
+      gsub(/[ž]/,"zh");
+      gsub(/[^0-9a-zA-Z .-]*/,"");
+      sub(/^[ \t\r\n]+/, ""); sub(/[ \t\r\n]+$/, "");
+      gsub(/ /,"-");
       print $0; }'
-    benchmark sed 'y/ÁÄÀÂΑÅĂÃĀǍĄČÇĆĎΔÐÉĚÈÊËΕΗĒĖĘΓĢΙÍÎÏĪĮÌǏΚĶΛĻΜŇÑΝŅÓÖÔΟΩÒØŌǑÕΠŘΡŠΣŤΤÚŮÜÙÛǓǕǗǙǛŪŲΒΞÝŸŽΖŹŻáäàâαåąăãāǎčçćďδđðéěèêëεηęēėγģιíîïīįìǐıκķλłļĺľμňñνńņóöôοωòøōǒõπřρŕšσśťτúůüùûǔǖǘǚǜūųβξýÿüžζźż/AAAAAAAAAAACCCDDDEEEEEEEEEEGGIIIIIIIIKKLLMNNNNOOOOOOOOOOPRRSSTTUUUUUUUUUUUUVXYYZZZZaaaaaaaaaaacccddddeeeeeeeeeeggiiiiiiiiikklllllmnnnnnooooooooooprrrsssttuuuuuuuuuuuuvxyyyzzzz/'
-    benchmark tr 'ÁÄÀÂΑÅĂÃĀǍĄČÇĆĎΔÐÉĚÈÊËΕΗĒĖĘΓĢΙÍÎÏĪĮÌǏΚĶΛĻΜŇÑΝŅÓÖÔΟΩÒØŌǑÕΠŘΡŠΣŤΤÚŮÜÙÛǓǕǗǙǛŪŲΒΞÝŸŽΖŹŻáäàâαåąăãāǎčçćďδđðéěèêëεηęēėγģιíîïīįìǐıκķλłļĺľμňñνńņóöôοωòøōǒõπřρŕšσśťτúůüùûǔǖǘǚǜūųβξýÿüžζźż' 'AAAAAAAAAAACCCDDDEEEEEEEEEEGGIIIIIIIIKKLLMNNNNOOOOOOOOOOPRRSSTTUUUUUUUUUUUUVXYYZZZZaaaaaaaaaaacccddddeeeeeeeeeeggiiiiiiiiikklllllmnnnnnooooooooooprrrsssttuuuuuuuuuuuuvxyyyzzzz'
-    benchmark tr 'ÄÀÂÁÃÅĀǍÇĆČÉÈÊËĒĖĘĚÎÏÍĪĮÌǏÑÖÔÒÓØŌǑÕÜÙÛǓǕǗǙǛÚŪŸŽŹŻäàâáãåāǎçćčéèêëēėęěîïíīįìǐñöôòóøōǒõüùûǔǖǘǚǜúūÿžźż' 'AAAAAAAACCCEEEEEEEEIIIIIIINOOOOOOOOUUUUUUUUUUYZZZaaaaaaaaccceeeeeeeeiiiiiiinoooooooouuuuuuuuuuyzzz'
+
     ;;
 
   check | env)
@@ -120,93 +167,100 @@ main() {
 ## Put your helper scripts here
 #####################################################################
 
-function print_header(){
+function print_header() {
   (
-  echo "# $1"
-  echo " "
-  echo "> run at $(date) on $os_name $os_version $os_machine $os_kernel"
-  echo " "
+    echo "# $1"
+    echo " "
+    echo "> run at $(date) on $os_name $os_version $os_machine $os_kernel"
+    echo " "
   ) | tee "$2"
 
 }
 
-function prep_input(){
+function prep_input() {
   local file="$1"
-  local nb_lines=${2:-10000}
-  local nb_chars=${3:-99}
-  LC_ALL=C tr -cd '[:alnum:][ ,.]' < /dev/urandom \
-  | fold -w "$nb_chars" \
-  | head -n "$nb_lines" > "$file"
+  local nb_lines=${2:-25000}
+  local nb_chars=${3:-199}
+  LC_ALL=C tr -cd '[:alnum:][ ,.]' </dev/urandom |
+    fold -w "$nb_chars" |
+    head -n "$nb_lines" >"$file"
   debug "Created input file [$file]: $(filesize $file) bytes"
 }
 
-function filesize(){
-  < "$1" wc -c | xargs
+function filesize() {
+  wc <"$1" -c | xargs
 }
 
-function benchmark(){
+function benchmark() {
   (
     ## explain the method
     echo "### $topic: using \`$1\`"
     local full_command
-    full_command=$(<<< "$*" tr "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
+    full_command=$(tr <<<"$*" "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
     echo '```'
     echo "Command: '$full_command'"
     # shellcheck disable=SC2154
-    if [[ ${1:1:1} == '$' ]] ; then
-      echo "Result: '$before' => '$(line="$before"; eval "echo $*" )'"
+    if [[ ${1:0:1} == '$' ]]; then
+      echo "Result: '$before' => '$(
+        line="$before"
+        eval "echo $*"
+      )'"
     else
-      echo "Result: '$before' => '$(<<< "$before" "$@")'"
+      echo "Result: '$before' => '$("$@" <<<"$before")'"
     fi
     echo '```'
-    
+
     ## now test throughput speed
     echo -n "* Throughput speed: "
-    bytes_in=$(< "$input" wc -c | xargs)
-    for (( i = 0; i < 5; i++ )); do
-    < "$input" /usr/bin/time -p "$@" 2>&1 > /dev/null | grep real
-    done \
-    | awk -v bytes_in="$bytes_in" '
+    bytes_in=$(wc <"$input" -c | xargs)
+    if [[ ${1:0:1} == '$' ]]; then
+      for ((i = 0; i < 5; i++)); do
+        /usr/bin/time <"$input" -p bash -c "while read line ; do eval 'echo $*' ; done" 2>&1 >/dev/null | grep real
+      done
+    else
+      for ((i = 0; i < 5; i++)); do
+        /usr/bin/time <"$input" -p "$@" 2>&1 >/dev/null | grep real
+      done
+    fi |
+      awk -v bytes_in="$bytes_in" '
       BEGIN {nb=0; msec=0}
       { nb++; msec+=$2*1000; }
       END { if(msec==0){msec=1}; printf("`%.1f MB/s`\n", bytes_in/msec/1000);}'
-    
+
     ## now test invocation speed
     echo -n "* Invocation speed: "
-    local nb_invocations=500
+    local nb_invocations=1000
     local line
     t0=$(microtime)
-    < "$input" head -$nb_invocations \
-    | while read -r line ; do
-    <<< "$line" "$@" &> /dev/null
-    done
+    head <"$input" -$nb_invocations |
+      if [[ ${1:0:1} == '$' ]]; then
+        while read -r line; do
+          eval "echo $* &> /dev/null"
+        done
+      else
+        while read -r line; do
+          "$@" <<<"$line" &>/dev/null
+        done
+      fi
+
     t1=$(microtime)
     debug "$nb_invocations invocations in ($t1 - $t0) seconds"
-    <<< "$t0 $t1" awk -v nb=$nb_invocations '{printf("`%.0f ops/sec`\n\n",nb/($2 - $1)); }'
+    awk <<<"$t0 $t1" -v nb=$nb_invocations '{printf("`%.0f ops/sec`\n\n",nb/($2 - $1)); }'
   ) | tee -a "$output_doc"
 }
 
-function cleanup(){
+function cleanup() {
   [[ -f "$input" ]] && rm -f "$input"
 }
 
-function microtime(){
-  date "+%s.%N" | awk '{printf("%.3f",$1)}'
-}
-
-do_action1() {
-  log_to_file "uppercase"
-  # Examples of required binaries/scripts and how to install them
-  # require_binary "ffmpeg"
-  # require_binary "convert" "imagemagick"
-  # require_binary "progressbar" "basher install pforret/progressbar"
-  # (code)
-}
-
-do_action2() {
-  log_to_file "lowercase"
-  # (code)
-
+function microtime() {
+  if [[ $(command -v perl) ]]; then
+    perl -MTime::HiRes=time -e 'printf "%.3f\n", time'
+  elif [[ $(command -v php) ]]; then
+    php -r 'echo microtime(true) . "\n"; '
+  else
+    date "+%s.%N" | awk '{printf("%.3f",$1)}'
+  fi
 }
 
 #####################################################################
@@ -312,26 +366,26 @@ function log_to_file() { [[ -n ${log_file:-} ]] && echo "$(date '+%H:%M:%S') | $
 
 ### string processing
 function lower_case() {
-  if [[ -n "$1" ]] ; then
-    <<< "$*" awk '{print tolower($0)}'
+  if [[ -n "$1" ]]; then
+    awk <<<"$*" '{print tolower($0)}'
   else
     awk '{print tolower($0)}'
   fi
-  }
+}
 
 function upper_case() {
-  if [[ -n "$1" ]] ; then
-    <<< "$*" awk '{print toupper($0)}'
+  if [[ -n "$1" ]]; then
+    awk <<<"$*" '{print toupper($0)}'
   else
     awk '{print toupper($0)}'
   fi
-  }
+}
 
 function transliterate() {
   # remove all characters with accents/diacritics to latin alphabet
   # shellcheck disable=SC2020
   sed 'y/àáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźżÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/aaaaaaaaaccceeeeeeeeiiiiiiiilnnooooooooosssuuuuuuuuuuyzzzAAAAAAAAACCCEEEEEEEEIIIIIIIILNNOOOOOOOOOSSSUUUUUUUUUUYZZZ/'
-  }
+}
 
 function slugify() {
   # slugify <input> <separator>
@@ -339,7 +393,7 @@ function slugify() {
   # slugify "Jack, Jill & Clémence LTD" "_"  => jack_jill_clemence_ltd
   separator="${2:-}"
   [[ -z "$separator" ]] && separator="-"
-    lower_case "$1" |
+  lower_case "$1" |
     transliterate |
     awk '{
           gsub(/[\[\]@#$%^&*;,.:()<>!?\/+=_]/," ",$0);
@@ -682,10 +736,10 @@ parse_options() {
 
   ) && safe_exit
 
-    local list_singles
-    local single_count
-    local choices
-    local single_params
+  local list_singles
+  local single_count
+  local choices
+  local single_params
   ## then run through the given parameters
   if expects_choices; then
     choices=$(list_options | awk -F"|" '
@@ -696,15 +750,15 @@ parse_options() {
     debug "$config_icon Expect : $single_count choice(s): $list_singles"
     [[ $# -eq 0 ]] && die "need the choice(s) [$list_singles]"
 
-  local choices_list
-  local valid_choice
+    local choices_list
+    local valid_choice
     for param in $choices; do
       [[ $# -eq 0 ]] && die "need choice [$param]"
-      [[ -z "$1" ]]  && die "need choice [$param]"
+      [[ -z "$1" ]] && die "need choice [$param]"
       debug "$config_icon Assign : $param=$1"
       # check if choice is in list
-      choices_list=$(list_options | awk -F"|" -v choice="$param"  '$1 == "choice" && $3 = choice {print $5}')
-      valid_choice=$(<<< "$choices_list" tr "," "\n" | grep "$1")
+      choices_list=$(list_options | awk -F"|" -v choice="$param" '$1 == "choice" && $3 = choice {print $5}')
+      valid_choice=$(tr <<<"$choices_list" "," "\n" | grep "$1")
       [[ -z "$valid_choice" ]] && die "choice [$1] is not valid, should be in list [$choices_list]"
 
       eval "$param=\"$1\""

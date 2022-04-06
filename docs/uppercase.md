@@ -1,36 +1,36 @@
 # uppercase
  
-> run at Wed Apr  6 17:50:48 CEST 2022 on Ubuntu 20.04 x86_64 Linux
+> run at Thu Apr  7 01:15:50 CEST 2022 on macOS 12.3 arm64 Darwin
  
 ### Convert text to uppercase: using `awk`
 ```
 Command: 'awk {print toupper($0)}'
-Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => '  [ÎŃTÉRNÄTÌÕNÃЛ] 'LIKE' /ΕΛΛΗΝΙΚΉ/;:,-РОССИЯ- @ՄԱՅՐ£'
+Result: 'łorèm îpsùm dôlõr sit amét' => 'ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT'
 ```
-* Throughput speed: `8.3 MB/s`
-* Invocation speed: `548 ops/sec`
+* Throughput speed: `20.0 MB/s`
+* Invocation speed: `258 ops/sec`
 
 ### Convert text to uppercase: using `sed`
 ```
 Command: 'sed y/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐ...'
-Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => '  [ÎŃTÉRNÄTÌÕNÃЛ] 'LIKE' /Ελληνική/;:,-Россия- @մայր£'
+Result: 'łorèm îpsùm dôlõr sit amét' => 'ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT'
 ```
-* Throughput speed: `1.2 MB/s`
-* Invocation speed: `673 ops/sec`
+* Throughput speed: `50.0 MB/s`
+* Invocation speed: `908 ops/sec`
 
 ### Convert text to uppercase: using `tr`
 ```
 Command: 'tr [:lower:] [:upper:]'
-Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => '  [ÎńTéRNäTÌÕNãЛ] 'LIKE' /Ελληνική/;:,-Россия- @մայր£'
+Result: 'łorèm îpsùm dôlõr sit amét' => 'ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT'
 ```
-* Throughput speed: `1000.0 MB/s`
-* Invocation speed: `822 ops/sec`
+* Throughput speed: `5.0 MB/s`
+* Invocation speed: `837 ops/sec`
 
 ### Convert text to uppercase: using `${line^^}`
 ```
 Command: '${line^^}'
-Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => ''
+Result: 'łorèm îpsùm dôlõr sit amét' => 'ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT'
 ```
-* Throughput speed: `3.8 MB/s`
-* Invocation speed: `16 ops/sec`
+* Throughput speed: `1.5 MB/s`
+* Invocation speed: `9174 ops/sec`
 

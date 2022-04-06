@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-. _benchmark.sh
-
-topic="Trim leading and trailing spaces"
+. ../_benchmark.shtopic="Trim leading and trailing spaces"
 before='    Just a Test          '
 
 prep_input 99000 200

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-. _benchmark.sh
-
-topic="Remove non-alphanumeric chars"
+. ../_benchmark.shtopic="Remove non-alphanumeric chars"
 before="   Some text, some more: 'not so [easy]' to! define?  "
 prep_input 5000 1000
 

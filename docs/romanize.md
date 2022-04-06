@@ -1,36 +1,28 @@
 # romanize
  
-> run at Wed Apr  6 23:15:46 CEST 2022 on Ubuntu 20.04 x86_64 Linux
+> run at Thu Apr  7 01:15:22 CEST 2022 on macOS 12.3 arm64 Darwin
  
 ### Convert text to latin alphabet: using `awk`
 ```
-Command: 'awk { gsub(/[ğ]/,""); gsub(/[ÀÁÂÄÅĀĂĄΑ]/,"A"); gsub(/[Æ]/,"A...'
-Result: '  [ÎńtérNäTÌÕNãl] 'like' Eλλη [](){}/.:^' => '  [InterNaTÌÕNãl] 'like' Elle [](){}/.:^'
+Command: 'awk { gsub(/[ğ]/,""); gsub(/[ÀÁÂÃÄÅĀĂĄǍ]/,"A"); gsub(/[Æ]/,"...'
+Result: 'ŁORÈM ÎPSÙM dôlõr sit amét' => 'LOREM IPSUM dolor sit amet'
 ```
-* Throughput speed: `1.6 MB/s`
-* Invocation speed: `336 ops/sec`
+* Throughput speed: `4.0 MB/s`
+* Invocation speed: `244 ops/sec`
 
 ### Convert text to latin alphabet: using `sed`
 ```
-Command: 'sed y/ÁÄÀÂΑÅĂÃĀǍĄČÇĆĎΔÐÉĚÈÊËΕΗĒĖĘΓĢΙÍÎÏĪĮÌǏΚĶΛĻΜŇÑΝŅÓÖÔΟΩÒØŌ...'
-Result: '  [ÎńtérNäTÌÕNãl] 'like' Eλλη [](){}/.:^' => '  [InterNaTIONal] 'like' Elle [](){}/.:^'
+Command: 'sed y/ÄÀÂÁÅĂÃĀǍĄÇĆČÐĎÉÈÊËĒĖĘĚĢÍÎÏĪĮÌǏĶŁĻÑŅŇÖÔÓÒØŌǑÕŘŠŤÜÙÛÚǓǕ...'
+Result: 'ŁORÈM ÎPSÙM dôlõr sit amét' => 'LOREM IPSUM dolor sit amet'
 ```
-* Throughput speed: `0.4 MB/s`
-* Invocation speed: `645 ops/sec`
+* Throughput speed: `50.0 MB/s`
+* Invocation speed: `903 ops/sec`
 
 ### Convert text to latin alphabet: using `tr`
 ```
-Command: 'tr ÁÄÀÂΑÅĂÃĀǍĄČÇĆĎΔÐÉĚÈÊËΕΗĒĖĘΓĢΙÍÎÏĪĮÌǏΚĶΛĻΜŇÑΝŅÓÖÔΟΩÒØŌǑÕΠ...'
-Result: '  [ÎńtérNäTÌÕNãl] 'like' Eλλη [](){}/.:^' => '  [zzzztzzrNzyTzezzNzzl] 'like' Ezzzzzz [](){}/.:^'
+Command: 'tr ÄÀÂÁÅĂÃĀǍĄÇĆČÐĎÉÈÊËĒĖĘĚĢÍÎÏĪĮÌǏĶŁĻÑŅŇÖÔÓÒØŌǑÕŘŠŤÜÙÛÚǓǕǗǙǛ...'
+Result: 'ŁORÈM ÎPSÙM dôlõr sit amét' => 'LOREM IPSUM dolor sit amet'
 ```
-* Throughput speed: `1000.0 MB/s`
-* Invocation speed: `808 ops/sec`
-
-### Convert text to latin alphabet: using `tr`
-```
-Command: 'tr ÄÀÂÁÃÅĀǍÇĆČÉÈÊËĒĖĘĚÎÏÍĪĮÌǏÑÖÔÒÓØŌǑÕÜÙÛǓǕǗǙǛÚŪŸŽŹŻäàâáãåāǎ...'
-Result: '  [ÎńtérNäTÌÕNãl] 'like' Eλλη [](){}/.:^' => '  [zzzAtzzrNzzTzezoNzzl] 'like' E�z�zη [](){}/.:^'
-```
-* Throughput speed: `1000.0 MB/s`
-* Invocation speed: `904 ops/sec`
+* Throughput speed: `5.0 MB/s`
+* Invocation speed: `908 ops/sec`
 
