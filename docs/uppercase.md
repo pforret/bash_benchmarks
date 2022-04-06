@@ -1,36 +1,36 @@
-# Convert to uppercase
+# uppercase
  
-> run at Tue Apr  5 23:45:11 CEST 2022 on Darwin 21.4.0
+> run at Wed Apr  6 17:50:48 CEST 2022 on Ubuntu 20.04 x86_64 Linux
  
-### Convert to uppercase: using `awk`
+### Convert text to uppercase: using `awk`
 ```
 Command: 'awk {print toupper($0)}'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  ÎŃTÉRNÄTÌÕNÃЛ TΕΧT [IS]: EXCIΤΙNĞ¡!  '
+Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => '  [ÎŃTÉRNÄTÌÕNÃЛ] 'LIKE' /ΕΛΛΗΝΙΚΉ/;:,-РОССИЯ- @ՄԱՅՐ£'
 ```
-* Throughput speed: `23.8 MB/s`
-* Invocation speed: `222 ops/sec`
+* Throughput speed: `8.3 MB/s`
+* Invocation speed: `548 ops/sec`
 
-### Convert to uppercase: using `sed`
+### Convert text to uppercase: using `sed`
 ```
 Command: 'sed y/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐ...'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  ÎŃTÉRNÄTÌÕNÃЛ TεχT [IS]: EXCıΤΙNĞ¡!  '
+Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => '  [ÎŃTÉRNÄTÌÕNÃЛ] 'LIKE' /Ελληνική/;:,-Россия- @մայր£'
 ```
-* Throughput speed: `66.7 MB/s`
-* Invocation speed: `500 ops/sec`
+* Throughput speed: `1.2 MB/s`
+* Invocation speed: `673 ops/sec`
 
-### Convert to uppercase: using `tr`
+### Convert text to uppercase: using `tr`
 ```
 Command: 'tr [:lower:] [:upper:]'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => '  ÎŃTÉRNÄTÌÕNÃЛ TΕΧT [IS]: EXCIΤΙNĞ¡!  '
+Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => '  [ÎńTéRNäTÌÕNãЛ] 'LIKE' /Ελληνική/;:,-Россия- @մայր£'
 ```
-* Throughput speed: `5.0 MB/s`
-* Invocation speed: `500 ops/sec`
+* Throughput speed: `1000.0 MB/s`
+* Invocation speed: `822 ops/sec`
 
-### Convert to uppercase: using `bash`
+### Convert text to uppercase: using `${line^^}`
 ```
-Command: 'bash -c while read line ; do echo ${line^^} ; done'
-Result: '  ÎńtérNäTÌÕNãЛ Tεχt [is]: excıΤΙNĞ¡!  ' => 'ÎŃTÉRNÄTÌÕNÃЛ TΕΧT [IS]: EXCIΤΙNĞ¡!'
+Command: '${line^^}'
+Result: '  [ÎńtérNäTÌÕNãЛ] 'like' /Ελληνική/;:,-Россия- @մայր£' => ''
 ```
-* Throughput speed: `1.8 MB/s`
-* Invocation speed: `286 ops/sec`
+* Throughput speed: `3.8 MB/s`
+* Invocation speed: `16 ops/sec`
 
