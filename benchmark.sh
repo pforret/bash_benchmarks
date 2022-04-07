@@ -99,7 +99,7 @@ main() {
     prep_input "$input"
     before="^1-2'3,4,5_6°8@9&0 (one){two}[three]"
     print_header "$action" "$output_doc"
-    benchmark awk '{gsub(/[^0-9a-zA-Z .-]*/,""); print;}'
+    benchmark awk '{gsub(/[^0-9a-zA-Z .-]/,""); print;}'
     benchmark sed 's/[^0-9a-zA-Z .-]*//g'
     benchmark sed 's/[^0-9a-zA-Z .-]//g'
     benchmark tr -cd '0-9a-zA-Z .-'
@@ -190,7 +190,7 @@ function print_header() {
 
 function prep_input() {
   local file="$1"
-  local nb_lines=${2:-25000}
+  local nb_lines=${2:-50000}
   local nb_chars=${3:-199}
   LC_ALL=C tr -cd '[:alnum:][ ,.]' </dev/urandom |
     fold -w "$nb_chars" |
@@ -224,19 +224,22 @@ function benchmark() {
     ## now test throughput speed
     echo -n "* Throughput speed: "
     bytes_in=$(wc <"$input" -c | xargs)
+    nb_runs=10
+    t0=$(microtime)
     if [[ ${1:0:1} == '$' ]]; then
-      for ((i = 0; i < 5; i++)); do
-        /usr/bin/time <"$input" -p bash -c "while read line ; do eval 'echo $*' ; done" 2>&1 >/dev/null | grep real
+      for ((i = 0; i < $nb_runs ; i++)); do
+        while read -r line ; do
+          eval 'echo $*' &>/dev/null
+        done < "$input"
       done
     else
-      for ((i = 0; i < 5; i++)); do
-        /usr/bin/time <"$input" -p "$@" 2>&1 >/dev/null | grep real
+      for ((i = 0; i < $nb_runs ; i++)); do
+        <"$input" "$@" &>/dev/null
       done
-    fi |
-      awk -v bytes_in="$bytes_in" '
-      BEGIN {nb=0; msec=0}
-      { nb++; msec+=$2*1000; }
-      END { if(msec==0){msec=1}; printf("`%.1f MB/s`\n", bytes_in/msec/1000);}'
+    fi
+    t1=$(microtime)
+    debug "$((nb_runs * bytes_in / 1000000)) MB in ($t1 - $t0) seconds"
+    awk <<<"$t0 $t1" -v nb="$nb_runs" -v bytes="$bytes_in" '{printf("`%.2f MB/sec`\n",(nb*bytes/1000000)/($2 - $1)); }'
 
     ## now test invocation speed
     echo -n "* Invocation speed: "
