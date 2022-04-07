@@ -84,7 +84,7 @@ main() {
 
   chars)
     #TIP: use «$script_prefix lowercase» to ...
-    topic="cur the first 20 characters of each line"
+    topic="cut the first 20 characters of each line"
     prep_input "$input"
     before="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
     print_header "$action" "$output_doc"
