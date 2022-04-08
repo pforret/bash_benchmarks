@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-. _benchmark.sh
-
-topic="Cut first 20 chars"
+. archive/_benchmark.shtopic="Cut first 20 chars"
 before='0123456789012345678901234567890123456789'
 
 

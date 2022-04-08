@@ -66,6 +66,8 @@ main() {
     before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT ŒßÞ"
     print_header "$action" "$output_doc"
     benchmark awk '{print tolower($0)}'
+    benchmark perl -ne 'print lc'
+    benchmark php -r 'while($f = fgets(STDIN)){ print strtolower($f); }'
     benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
     benchmark tr "[:upper:]" "[:lower:]"
     benchmark '${line,,}'
@@ -184,7 +186,7 @@ function print_header() {
   (
     echo "# $1"
     echo " "
-    echo "> run at $(date) on $os_name $os_version $os_machine $os_kernel"
+    echo "> run at $(date) on $os_name $os_version $os_machine $os_kernel (v$script_version)"
     echo " "
   ) | tee "$2"
 

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-. _benchmark.sh
-
-topic="Cut first 5 fields"
+. archive/_benchmark.shtopic="Cut first 5 fields"
 before='f1 : f3 f4 f5 f6 f7'
 
 prep_input 50000 1000
