@@ -70,9 +70,20 @@ main() {
     benchmark perl -CSA -ne 'use utf8; binmode STDOUT, ":utf8"; print lc'
     benchmark php -r 'while($f = fgets(STDIN)){ print strtolower($f); }'
     benchmark php -r 'while($f = fgets(STDIN)){ print mb_strtolower($f); }'
+    benchmark sed -e 's/\(.*\)/\L\1/'
     benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
     benchmark tr "[:upper:]" "[:lower:]"
     benchmark '${line,,}'
+    ;;
+
+  # cf https://stackoverflow.com/questions/2264428/how-to-convert-a-string-to-lower-case-in-bash
+  titlecase)
+    #TIP: use «$script_prefix titlecase» to ...
+    topic="Convert text to title case"
+    prep_input "$input"
+    before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT ŒßÞ"
+    print_header "$action" "$output_doc"
+    benchmark '${line[@]^}'
     ;;
 
   trim)
