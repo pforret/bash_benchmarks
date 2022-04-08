@@ -50,7 +50,7 @@ main() {
     #TIP: use «$script_prefix uppercase» to ...
     topic="Convert text to uppercase"
     prep_input "$input"
-    before="łorèm îpsùm dôlõr sit amét"
+    before="łorèm îpsùm dôlõr sit amét œßþ"
     print_header "$action" "$output_doc"
     benchmark awk '{print toupper($0)}'
     benchmark sed 'y/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/'
@@ -63,7 +63,7 @@ main() {
     #TIP: use «$script_prefix lowercase» to ...
     topic="Convert text to lowercase"
     prep_input "$input"
-    before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT"
+    before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT ŒßÞ"
     print_header "$action" "$output_doc"
     benchmark awk '{print tolower($0)}'
     benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
@@ -110,7 +110,7 @@ main() {
     #TIP: use «$script_prefix romanize» to ...
     topic="Convert text to latin alphabet"
     prep_input "$input"
-    before="ŁORÈM ÎPSÙM dôlõr sit amét"
+    before="ŁORÈM ÎPSÙM dôlõr sit amét œßþ"
     print_header "$action" "$output_doc"
     benchmark awk '{
       gsub(/[ğ]/,""); gsub(/[ÀÁÂÃÄÅĀĂĄǍ]/,"A"); gsub(/[Æ]/,"AE"); gsub(/[ÇĆČ]/,"C"); gsub(/[Č]/,"CH"); gsub(/[ÐĎ]/,"D");
@@ -127,6 +127,8 @@ main() {
     to="AAAAAAAAAACCCDDEEEEEEEEGIIIIIIIKLLNNNOOOOOOOORSTUUUUUUUUUUUUYYZZZaaaaaaaaaacccdddeeeeeeeegiiiiiiiikllllnnnnoooooooorrsstuuuuuuuuuuuuyyyzzz"
     benchmark sed "y/$from/$to/"
     benchmark tr "$from" "$to"
+    benchmark iconv -f utf-8 -t ascii//TRANSLIT
+    benchmark uni2ascii -B
     ;;
 
   slugify)
@@ -217,7 +219,7 @@ function benchmark() {
         eval "echo $*"
       )'"
     else
-      echo "Result: '$before' => '$("$@" <<<"$before")'"
+      echo "Result: '$before' => '$("$@" <<<"$before" 2>/dev/null)'"
     fi
     echo '```'
 

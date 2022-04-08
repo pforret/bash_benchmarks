@@ -20,10 +20,10 @@ $alphabets["FR"]["original"]["upper"]=explode(",","A,À,Â,Æ,B,C,Ç,D,E,É,È,�
 $alphabets["FR"]["romanize"]["lower"]=explode(",","a,a,a,ae,b,c,c,d,e,e,e,e,e,f,g,h,i,j,k,l,m,n,o,o,oe,p,q,r,s,t,u,u,u,u,v,w,x,y,y,z");
 $alphabets["FR"]["romanize"]["upper"]=explode(",","A,A,A,AE,B,C,C,D,E,E,E,E,E,F,G,H,I,J,K,L,M,N,O,O,OE,P,Q,R,S,T,U,U,U,U,V,W,X,Y,Y,Z");
 
-//$alphabets["GR"]["original"]["lower"]=explode(",","α,β,γ,δ,ε,ζ,η,θ,ι,κ,λ,μ,ν,ξ,ο,π,ρ,σ,τ,υ,φ,χ,ψ,ω");
-//$alphabets["GR"]["original"]["upper"]=explode(",","Α,Β,Γ,Δ,Ε,Ζ,Η,Θ,Ι,Κ,Λ,Μ,Ν,Ξ,Ο,Π,Ρ,Σ,Τ,Υ,Φ,Χ,Ψ,Ω");
-//$alphabets["GR"]["romanize"]["lower"]=explode(",","a,v,g,d,e,z,e,th,i,k,l,m,n,x,o,p,r,s,t,υ,ph,ch,ps,o");
-//$alphabets["GR"]["romanize"]["upper"]=explode(",","A,V,G,D,E,Z,E,TH,I,K,L,M,N,X,O,P,R,S,T,Υ,PH,CH,PS,O");
+$alphabets["GR"]["original"]["lower"]=explode(",","α,β,γ,δ,ε,ζ,η,θ,ι,κ,λ,μ,ν,ξ,ο,π,ρ,σ,τ,υ,φ,χ,ψ,ω");
+$alphabets["GR"]["original"]["upper"]=explode(",","Α,Β,Γ,Δ,Ε,Ζ,Η,Θ,Ι,Κ,Λ,Μ,Ν,Ξ,Ο,Π,Ρ,Σ,Τ,Υ,Φ,Χ,Ψ,Ω");
+$alphabets["GR"]["romanize"]["lower"]=explode(",","a,v,g,d,e,z,e,th,i,k,l,m,n,x,o,p,r,s,t,υ,ph,ch,ps,o");
+$alphabets["GR"]["romanize"]["upper"]=explode(",","A,V,G,D,E,Z,E,TH,I,K,L,M,N,X,O,P,R,S,T,Υ,PH,CH,PS,O");
 
 $alphabets["HR"]["original"]["lower"]=explode(",","Č,Ć,Đ,Š,Ž");
 $alphabets["HR"]["original"]["lower"]=explode(",","č,ć,đ,š,ž");
@@ -52,22 +52,22 @@ $alphabets["DIA"]["romanize"]["lower"]=explode(",","a,a,a,a,ae,a,a,a,a,c,c,c,e,e
 $alphabets["DIA"]["romanize"]["upper"]=explode(",","A,A,A,A,AE,A,A,A,A,C,C,C,E,E,E,E,E,E,E,E,I,I,I,I,I,I,I,I,L,O,O,O,O,OE,O,O,O,O,U,U,U,U,U,U,U,U,U,U,Z,Z,Z");
 
 ## CYRILLIC LANGUAGES
-//$alphabets["BY"]["original"]["lower"]=explode(",","ў");
-//$alphabets["BY"]["original"]["upper"]=explode(",","Ў");
-//$alphabets["BY"]["romanize"]["lower"]=explode(",","w");
-//$alphabets["BY"]["romanize"]["upper"]=explode(",","W");
-//$alphabets["CS"]["original"]["lower"]=explode(",","Љ,Њ,Ћ,Ђ,Џ");
-//$alphabets["CS"]["original"]["lower"]=explode(",","љ,њ,ћ,ђ,џ");
-//$alphabets["CS"]["romanize"]["lower"]=explode(",","LJ,NJ,C,D,DZ");
-//$alphabets["CS"]["romanize"]["lower"]=explode(",","lj,nj,c,d,dz");
-//$alphabets["MK"]["original"]["lower"]=explode(",","ѓ,ќ,џ");
-//$alphabets["MK"]["original"]["upper"]=explode(",","Ѓ,Ќ,Џ");
-//$alphabets["MK"]["romanize"]["lower"]=explode(",","f,k,dz");
-//$alphabets["MK"]["romanize"]["upper"]=explode(",","F,K,DZ");
-//$alphabets["RU"]["original"]["lower"]=explode(",","α,б,в,г,д,е,ё,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я");
-//$alphabets["RU"]["original"]["upper"]=explode(",","Α,Б,В,Г,Д,Е,Ё,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Я");
-//$alphabets["RU"]["romanize"]["lower"]=explode(",","a,b,v,g,d,e,e,zh,z,i,j,k,l,m,n,o,p,r,s,t,u,f,kh,c,ch,sh,sch,,y,,e,yu,ya");
-//$alphabets["RU"]["romanize"]["upper"]=explode(",","A,B,V,G,D,E,E,ZH,Z,I,J,K,L,M,N,O,P,R,S,T,U,F,KH,C,CH,SH,SCH,,Y,,E,YU,YA");
+$alphabets["BY"]["original"]["lower"]=explode(",","ў");
+$alphabets["BY"]["original"]["upper"]=explode(",","Ў");
+$alphabets["BY"]["romanize"]["lower"]=explode(",","w");
+$alphabets["BY"]["romanize"]["upper"]=explode(",","W");
+$alphabets["CS"]["original"]["lower"]=explode(",","Љ,Њ,Ћ,Ђ,Џ");
+$alphabets["CS"]["original"]["lower"]=explode(",","љ,њ,ћ,ђ,џ");
+$alphabets["CS"]["romanize"]["lower"]=explode(",","LJ,NJ,C,D,DZ");
+$alphabets["CS"]["romanize"]["lower"]=explode(",","lj,nj,c,d,dz");
+$alphabets["MK"]["original"]["lower"]=explode(",","ѓ,ќ,џ");
+$alphabets["MK"]["original"]["upper"]=explode(",","Ѓ,Ќ,Џ");
+$alphabets["MK"]["romanize"]["lower"]=explode(",","f,k,dz");
+$alphabets["MK"]["romanize"]["upper"]=explode(",","F,K,DZ");
+$alphabets["RU"]["original"]["lower"]=explode(",","α,б,в,г,д,е,ё,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я");
+$alphabets["RU"]["original"]["upper"]=explode(",","Α,Б,В,Г,Д,Е,Ё,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Я");
+$alphabets["RU"]["romanize"]["lower"]=explode(",","a,b,v,g,d,e,e,zh,z,i,j,k,l,m,n,o,p,r,s,t,u,f,kh,c,ch,sh,sch,,y,,e,yu,ya");
+$alphabets["RU"]["romanize"]["upper"]=explode(",","A,B,V,G,D,E,E,ZH,Z,I,J,K,L,M,N,O,P,R,S,T,U,F,KH,C,CH,SH,SCH,,Y,,E,YU,YA");
 
 ## SLAVIC LANGUAGES
 $alphabets["LT"]["original"]["lower"]=explode(",","ą,č,ę,ė,į,š,u,ų,ū,ž");
@@ -98,10 +98,10 @@ $alphabets["TR"]["romanize"]["lower"]=explode(",",",i,o,sh,y");
 $alphabets["TR"]["romanize"]["lower"]=explode(",",",i,o,sh,y");
 
 ## ALTERNATIVE WRITING SYSTEMS
-//$alphabets["AM"]["original"]["lower"]=explode(",","ա,բ,գ,դ,ե,զ,է,ը,թ,ժ,ի,լ,խ,ծ,կ,հ,ձ,ղ,ճ,մ,յ,ն,շ,ո,չ,պ,ջ,ռ,ս,վ,տ,ր,ց,ւ,փ,ք,օ,ֆ,ու,և");
-//$alphabets["AM"]["original"]["upper"]=explode(",","Ա,Բ,Գ,Դ,Ե,Զ,Է,Ը,Թ,Ժ,Ի,Լ,Խ,Ծ,Կ,Հ,Ձ,Ղ,Ճ,Մ,Յ,Ն,Շ,Ո,Չ,Պ,Ջ,Ռ,Ս,Վ,Տ,Ր,Ց,Ւ,Փ,Ք,Օ,Ֆ,ՈՒ,ԵՒ");
-//$alphabets["AM"]["romanize"]["lower"]=explode(",","a,b,g,d,e,z,e,e,t,z,i,l,x,c,k,h,dz,g,ch,m,y,n,sh,o,c,p,j,r,s,v,t,r,c,w,p,k,o,f,u,ew");
-//$alphabets["AM"]["romanize"]["upper"]=explode(",","A,B,G,D,E,Z,E,E,T,Z,I,L,X,C,K,H,DZ,G,CH,M,Y,N,SH,O,C,P,J,R,S,V,T,R,C,W,P,K,O,F,U,EW");
+$alphabets["AM"]["original"]["lower"]=explode(",","ա,բ,գ,դ,ե,զ,է,ը,թ,ժ,ի,լ,խ,ծ,կ,հ,ձ,ղ,ճ,մ,յ,ն,շ,ո,չ,պ,ջ,ռ,ս,վ,տ,ր,ց,ւ,փ,ք,օ,ֆ,ու,և");
+$alphabets["AM"]["original"]["upper"]=explode(",","Ա,Բ,Գ,Դ,Ե,Զ,Է,Ը,Թ,Ժ,Ի,Լ,Խ,Ծ,Կ,Հ,Ձ,Ղ,Ճ,Մ,Յ,Ն,Շ,Ո,Չ,Պ,Ջ,Ռ,Ս,Վ,Տ,Ր,Ց,Ւ,Փ,Ք,Օ,Ֆ,ՈՒ,ԵՒ");
+$alphabets["AM"]["romanize"]["lower"]=explode(",","a,b,g,d,e,z,e,e,t,z,i,l,x,c,k,h,dz,g,ch,m,y,n,sh,o,c,p,j,r,s,v,t,r,c,w,p,k,o,f,u,ew");
+$alphabets["AM"]["romanize"]["upper"]=explode(",","A,B,G,D,E,Z,E,E,T,Z,I,L,X,C,K,H,DZ,G,CH,M,Y,N,SH,O,C,P,J,R,S,V,T,R,C,W,P,K,O,F,U,EW");
 
 $mapping=[];
 foreach($alphabets as $lang => $data1){
@@ -136,6 +136,7 @@ foreach($mapping as $mapped_to => $list){
         $from.=$letter;
         $to.=$mapped_to;
     }
+    $from.=" ";
 }
 
 print "# using SED\n";
