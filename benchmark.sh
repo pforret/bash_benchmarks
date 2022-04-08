@@ -68,6 +68,7 @@ main() {
     benchmark awk '{print tolower($0)}'
     benchmark perl -ne 'print lc'
     benchmark php -r 'while($f = fgets(STDIN)){ print strtolower($f); }'
+    benchmark php -r 'while($f = fgets(STDIN)){ print mb_strtolower($f); }'
     benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
     benchmark tr "[:upper:]" "[:lower:]"
     benchmark '${line,,}'
