@@ -241,7 +241,7 @@ function benchmark() {
     fi
     t1=$(microtime)
     debug "$((nb_runs * bytes_in / 1000000)) MB in ($t1 - $t0) seconds"
-    awk <<<"$t0 $t1" -v nb="$nb_runs" -v bytes="$bytes_in" '{printf("`%.2f MB/sec`\n",(nb*bytes/1000000)/($2 - $1)); }'
+    awk <<<"$t0 $t1" -v nb="$nb_runs" -v bytes="$bytes_in" '{printf("`%.0f MB/sec`\n",(nb*bytes/1000000)/($2 - $1)); }'
 
     ## now test invocation speed
     echo -n "* Invocation speed: "

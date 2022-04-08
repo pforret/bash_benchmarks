@@ -136,7 +136,7 @@ foreach($mapping as $mapped_to => $list){
         $from.=$letter;
         $to.=$mapped_to;
     }
-    $from.=" ";
+    //$from.=" ";
 }
 
 print "# using SED\n";
