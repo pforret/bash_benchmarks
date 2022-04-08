@@ -67,6 +67,7 @@ main() {
     print_header "$action" "$output_doc"
     benchmark awk '{print tolower($0)}'
     benchmark perl -ne 'print lc'
+    benchmark perl -CSA -ne 'use utf8; binmode STDOUT, ":utf8"; print lc'
     benchmark php -r 'while($f = fgets(STDIN)){ print strtolower($f); }'
     benchmark php -r 'while($f = fgets(STDIN)){ print mb_strtolower($f); }'
     benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
