@@ -90,11 +90,13 @@ main() {
     #TIP: use «$script_prefix lowercase» to ...
     topic="Trim leading and trailing space"
     prep_input "$input"
-    before="    ( Lorem ipsum dolor sit amet )   "
+    before="    WORD        "
     print_header "$action" "$output_doc"
     benchmark awk '{sub(/^[ \t\r\n]+/, ""); sub(/[ \t\r\n]+$/, ""); print}'
     benchmark sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
     benchmark xargs
+    benchmark php -r 'while($f = fgets(STDIN)){ print trim($f); }'
+    benchmark '${line#"${line%%[![:space:]]*}"}'
     ;;
 
   chars)
