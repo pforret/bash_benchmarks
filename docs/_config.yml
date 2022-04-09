@@ -1,4 +1,4 @@
 theme: jekyll-theme-cayman
-
+google_analytics: G-TR8NTB5WL0
 gems:
   - jekyll-toc
