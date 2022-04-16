@@ -24,7 +24,7 @@ option|t|tmp_dir|folder for temp files|/tmp/$script_prefix
 option|b|before|text to transform|  [ÎńtérNäTÌÕNãl] 'like' Eλλη
 option|o|out_dir|folder for output reports|docs
 option|i|in_file|input file (generated before the benchmark)|$script_prefix.input.txt
-choice|1|action|action to perform|alpha,chars,lowercase,romanize,slugify,titlecase,trim,uppercase,check,env,update
+choice|1|action|action to perform|alpha,chars,copy,lowercase,romanize,slugify,titlecase,trim,uppercase,check,env,update
 " | grep -v '^#' | grep -v '^\s*$'
 }
 
@@ -186,6 +186,21 @@ main() {
     benchmark gtr -cs '[:alnum:].-' '-'
     benchmark '${line//[^a-zA-Z0-9]/-}'
     benchmark '$(line="${line//[^a-zA-Z0-9 ]/}"; line="${line%"${line##*[![:space:]]}"}"; line="${line#"${line%%[![:space:]]*}"}"; echo "${line// /-}")'
+  ;;
+
+  copy)
+    #TIP: use «$script_prefix nothing» to ...
+    topic="Just opy from stdin to stdout"
+    prep_input "$input"
+    before="Lorem îpsûm 1 2 3   "
+    print_header "$action" "$output_doc"
+    benchmark awk '{print;}'
+    benchmark cat
+    benchmark gcat
+    benchmark tr a a
+    benchmark gtr a a
+    benchmark sed 's/a/a/'
+    benchmark '${line}'
 
     ;;
 
@@ -223,7 +238,8 @@ function print_header() {
     echo "# $1"
     echo " "
     echo "> run at $(date)"
-    echo "> run on $os_name $os_version $os_machine $os_kernel (v$script_version)"
+    echo "> run on $os_name $os_version $os_machine $os_kernel"
+    echo "> benchmark v$script_version"
     echo " "
   ) | tee "$2"
 
@@ -266,7 +282,8 @@ function benchmark() {
       echo "After : '$("$@" <<<"$before" 2>/dev/null)'"
       echo '```'
       binary=$(which "$1")
-      echo "* Binary: __$(recursive_readlink "$binary")__"
+      echo "* Binary: $(recursive_readlink "$binary")"
+      "$binary" --version &> /dev/null && echo "* Version: $("$binary" --version 2>&1 | head -1)"
     fi
 
     ## now test throughput speed
