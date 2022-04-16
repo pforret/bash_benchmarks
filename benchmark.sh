@@ -51,6 +51,7 @@ main() {
     benchmark awk '{print toupper($0)}'
     benchmark sed 'y/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/'
     benchmark tr "[:lower:]" "[:upper:]"
+    benchmark gtr "[:lower:]" "[:upper:]"
     benchmark '${line^^}'
 
     ;;
@@ -70,6 +71,7 @@ main() {
     benchmark sed -e 's/\(.*\)/\L\1/'
     benchmark sed 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÄÆÃÅĀǍÇĆČÈÉÊËĒĖĘĚÎÏÍÍĪĮÌǏŁÑŃÔÖÒÓŒØŌǑÕẞŚŠÛÜǓÙǕǗǙǛÚŪŸŽŹŻ/abcdefghijklmnopqrstuvwxyzàáâäæãåāǎçćčèéêëēėęěîïííīįìǐłñńôöòóœøōǒõßśšûüǔùǖǘǚǜúūÿžźż/'
     benchmark tr "[:upper:]" "[:lower:]"
+    benchmark gtr "[:upper:]" "[:lower:]"
     benchmark '${line,,}'
     ;;
 
@@ -106,6 +108,7 @@ main() {
     print_header "$action" "$output_doc"
     benchmark awk '{print substr($0,1,20)}'
     benchmark cut -c1-20
+    benchmark gcut -c1-20
     benchmark '${line:0:20}'
     ;;
 
@@ -120,6 +123,7 @@ main() {
     benchmark sed -e 's/[^0-9a-zA-Z .-]*//g' -e 's/  */-/g'
     benchmark sed -e 's/[^0-9a-zA-Z .-]//g' -e 's/  */-/g'
     benchmark tr -cs '[:alnum:].-' '-'
+    benchmark gtr -cs '[:alnum:].-' '-'
     ;;
 
   romanize)
@@ -164,6 +168,7 @@ main() {
     benchmark sed "y/$from/$to/"
     benchmark sed -e 's/[ğЪЬъь]//g' -e 's/[ÀÁÂÃÄÅĀĂĄǍΑԱ]/A/g' -e 's/[Æ]/AE/g' -e 's/[БԲ]/B/g' -e 's/[ÇĆČЦԾՉՑ]/C/g' -e 's/[ČΧЧՃ]/CH/g' -e 's/[ÐĎΔДԴ]/D/g' -e 's/[ЏՁ]/DZ/g' -e 's/[ÈÉÊËĒĖĘĚΕΗЁЕЭԵԷԸ]/E/g' -e 's/[ԵՒ]/EW/g' -e 's/[ЃФՖ]/F/g' -e 's/[ĢΓГԳՂ]/G/g' -e 's/[Հ]/H/g' -e 's/[ÌÍÎÏĪĮǏΙИԻ]/I/g' -e 's/[ЙՋ]/J/g' -e 's/[ĶΚЌКԿՔ]/K/g' -e 's/[Х]/KH/g' -e 's/[ĻŁΛЛԼ]/L/g' -e 's/[ΜМՄ]/M/g' -e 's/[ÑŅŇΝНՆ]/N/g' -e 's/[ÒÓÔÕÖØŌǑΟΩОՈՕ]/O/g' -e 's/[ØŒ]/OE/g' -e 's/[ΠПՊՓ]/P/g' -e 's/[Φ]/PH/g' -e 's/[Ψ]/PS/g' -e 's/[ŘΡРՌՐ]/R/g' -e 's/[ŠΣСՍ]/S/g' -e 's/[Щ]/SCH/g' -e 's/[ŠȘШՇ]/SH/g' -e 's/[ẞ]/SS/g' -e 's/[ŤΤТԹՏ]/T/g' -e 's/[ÞΘ]/TH/g' -e 's/[Ț]/TS/g' -e 's/[ÙÚÛÜŪŮŲǓǕǗǙǛУՈՒ]/U/g' -e 's/[ΒВՎ]/V/g' -e 's/[ЎՒ]/W/g' -e 's/[ΞԽ]/X/g' -e 's/[ÝŸЫՅ]/Y/g' -e 's/[Я]/YA/g' -e 's/[Ю]/YU/g' -e 's/[ŹŻŽΖЗԶԺ]/Z/g' -e 's/[ŽЖ]/ZH/g' -e 's/[àáâãäåāăąǎαա]/a/g' -e 's/[æ]/ae/g' -e 's/[бբ]/b/g' -e 's/[çćčцћծչց]/c/g' -e 's/[čχчճ]/ch/g' -e 's/[ðďđδдђդ]/d/g' -e 's/[џձ]/dz/g' -e 's/[èéêëēėęěεηеэёեէը]/e/g' -e 's/[և]/ew/g' -e 's/[фѓֆ]/f/g' -e 's/[ģγгգղ]/g/g' -e 's/[հ]/h/g' -e 's/[ìíîïīįıǐιиի]/i/g' -e 's/[йջ]/j/g' -e 's/[ķκкќկք]/k/g' -e 's/[х]/kh/g' -e 's/[ĺļľłλлլ]/l/g' -e 's/[љ]/lj/g' -e 's/[μмմ]/m/g' -e 's/[ñńņňνнն]/n/g' -e 's/[њ]/nj/g' -e 's/[òóôõöøōǒοωоոօ]/o/g' -e 's/[øœ]/oe/g' -e 's/[πпպփ]/p/g' -e 's/[φ]/ph/g' -e 's/[ψ]/ps/g' -e 's/[ŕřρрռր]/r/g' -e 's/[śšσсս]/s/g' -e 's/[щ]/sch/g' -e 's/[şšșшշ]/sh/g' -e 's/[ß]/ss/g' -e 's/[ťτтթտ]/t/g' -e 's/[þθ]/th/g' -e 's/[čț]/ts/g' -e 's/[ùúûüūůųǔǖǘǚǜуու]/u/g' -e 's/[βвվ]/v/g' -e 's/[ўւ]/w/g' -e 's/[ξխ]/x/g' -e 's/[üýÿыյ]/y/g' -e 's/[я]/ya/g' -e 's/[ю]/yu/g' -e 's/[źżžζзզժ]/z/g' -e 's/[žж]/zh/g'
     benchmark tr "$from" "$to"
+    benchmark gtr "$from" "$to"
     benchmark iconv -f utf-8 -t ascii//TRANSLIT
     benchmark uni2ascii -B
     ;;
@@ -178,6 +183,7 @@ main() {
     benchmark sed -e 's/[^0-9a-zA-Z .-]*//g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/  */-/g'
     benchmark sed -e 's/[^0-9a-zA-Z .-]//g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/  */-/g'
     benchmark tr -cs '[:alnum:].-' '-'
+    benchmark gtr -cs '[:alnum:].-' '-'
     benchmark '${line//[^a-zA-Z0-9]/-}'
     benchmark '$(line="${line//[^a-zA-Z0-9 ]/}"; line="${line%"${line##*[![:space:]]}"}"; line="${line#"${line%%[![:space:]]*}"}"; echo "${line// /-}")'
 
@@ -216,7 +222,8 @@ function print_header() {
   (
     echo "# $1"
     echo " "
-    echo "> run at $(date) on $os_name $os_version $os_machine $os_kernel (v$script_version)"
+    echo "> run at $(date)"
+    echo "> run on $os_name $os_version $os_machine $os_kernel (v$script_version)"
     echo " "
   ) | tee "$2"
 
@@ -253,11 +260,14 @@ function benchmark() {
         line="$before"
         eval "echo $*"
       )'"
+      echo '```'
     else
       echo "Before: '$before'"
       echo "After : '$("$@" <<<"$before" 2>/dev/null)'"
+      echo '```'
+      binary=$(which "$1")
+      echo "* Binary: __$(recursive_readlink "$binary")__"
     fi
-    echo '```'
 
     ## now test throughput speed
     echo -n "* Throughput speed: "

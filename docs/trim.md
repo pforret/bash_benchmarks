@@ -1,6 +1,6 @@
 # trim
  
-> run at Sat Apr  9 22:48:07 CEST 2022 on macOS 12.3 arm64 Darwin (v0.5.9)
+> run at Sat Apr 16 22:19:45 CEST 2022 on macOS 12.3 arm64 Darwin (v0.6.0)
  
 ### Trim leading and trailing space: using `awk`
 ```
@@ -10,8 +10,9 @@ Before: '   This is sentence #1
 After : 'This is sentence #1
 And this is #2'
 ```
-* Throughput speed: `313 MB/sec`
-* Invocation speed: `253 ops/sec`
+* Binary: __/opt/homebrew/Cellar/gawk/5.1.1/bin/gawk__
+* Throughput speed: `310 MB/sec`
+* Invocation speed: `272 ops/sec`
 
 ### Trim leading and trailing space: using `sed`
 ```
@@ -21,8 +22,9 @@ Before: '   This is sentence #1
 After : 'This is sentence #1
 And this is #2'
 ```
-* Throughput speed: `56 MB/sec`
-* Invocation speed: `907 ops/sec`
+* Binary: __/usr/bin/sed__
+* Throughput speed: `58 MB/sec`
+* Invocation speed: `1007 ops/sec`
 
 ### Trim leading and trailing space: using `xargs`
 ```
@@ -31,8 +33,9 @@ Before: '   This is sentence #1
        And this is #2    '
 After : 'This is sentence #1 And this is #2'
 ```
-* Throughput speed: `21 MB/sec`
-* Invocation speed: `644 ops/sec`
+* Binary: __/usr/bin/xargs__
+* Throughput speed: `20 MB/sec`
+* Invocation speed: `655 ops/sec`
 
 ### Trim leading and trailing space: using `php`
 ```
@@ -42,8 +45,9 @@ Before: '   This is sentence #1
 After : 'This is sentence #1
 And this is #2'
 ```
-* Throughput speed: `266 MB/sec`
-* Invocation speed: `58 ops/sec`
+* Binary: __/opt/homebrew/Cellar/php/8.1.4/bin/php__
+* Throughput speed: `258 MB/sec`
+* Invocation speed: `55 ops/sec`
 
 ### Trim leading and trailing space: using `$(line="${line#"${line%%[![:space:]]*}"}"; echo "${line%"${line##*[![:space:]]}"}")`
 ```
@@ -53,5 +57,5 @@ Before: '   This is sentence #1
 After : 'This is sentence #1        And this is #2'
 ```
 * Throughput speed: `5 MB/sec`
-* Invocation speed: `1650 ops/sec`
+* Invocation speed: `1859 ops/sec`
 
