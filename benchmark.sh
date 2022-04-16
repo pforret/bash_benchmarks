@@ -12,10 +12,6 @@ script_prefix=""
 script_basename=""
 install_package=""
 topic=""
-# GREEK: Α α, Β β, Γ γ, Δ δ, Ε ε, Ζ ζ, Η η, Θ θ, Ι ι, Κ κ, Λ λ, Μ μ, Ν ν, Ξ ξ, Ο ο, Π π, Ρ ρ, Σ σ/ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω.
-# CYRILLIC: А а 	Б б 	В в 	Г г 	Д д 	Е е 	Ё ё 	Ж ж 	З з 	И и 	Й й   К к 	Л л 	М м 	Н н 	О о 	П п 	Р р 	С с 	Т т 	У у 	Ф ф   Х х 	Ц ц 	Ч ч 	Ш ш 	Щ щ 	Ъ ъ 	Ы ы 	Ь ь 	Э э 	Ю ю 	Я я
-# https://www.loc.gov/catdir/cpso/roman.html
-# https://en.wikipedia.org/wiki/Transliteration
 list_options() {
   echo -n "
 #commented lines will be filtered
@@ -28,7 +24,7 @@ option|t|tmp_dir|folder for temp files|/tmp/$script_prefix
 option|b|before|text to transform|  [ÎńtérNäTÌÕNãl] 'like' Eλλη
 option|o|out_dir|folder for output reports|docs
 option|i|in_file|input file (generated before the benchmark)|$script_prefix.input.txt
-choice|1|action|action to perform|alpha,chars,lowercase,romanize,slugify,trim,uppercase,check,env,update
+choice|1|action|action to perform|alpha,chars,lowercase,romanize,slugify,titlecase,trim,uppercase,check,env,update
 " | grep -v '^#' | grep -v '^\s*$'
 }
 
@@ -47,7 +43,7 @@ main() {
   action=$(lower_case "$action")
   case $action in
   uppercase)
-    #TIP: use «$script_prefix uppercase» to ...
+    #TIP: use «$script_prefix uppercase» to convert strings to upper case
     topic="Convert text to uppercase"
     prep_input "$input"
     before="łorèm îpsùm dôlõr sit amét œßþ"
@@ -59,8 +55,9 @@ main() {
 
     ;;
 
+  # cf https://stackoverflow.com/questions/2264428/how-to-convert-a-string-to-lower-case-in-bash
   lowercase)
-    #TIP: use «$script_prefix lowercase» to ...
+    #TIP: use «$script_prefix lowercase» to convert strings to lower case
     topic="Convert text to lowercase"
     prep_input "$input"
     before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT ŒßÞ"
@@ -76,27 +73,29 @@ main() {
     benchmark '${line,,}'
     ;;
 
-  # cf https://stackoverflow.com/questions/2264428/how-to-convert-a-string-to-lower-case-in-bash
   titlecase)
-    #TIP: use «$script_prefix titlecase» to ...
+    #TIP: use «$script_prefix titlecase» to convert strings to title case
     topic="Convert text to title case"
     prep_input "$input"
-    before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT ŒßÞ"
+    before="łorèm îpsùm dôlõr sit amét œßþ"
     print_header "$action" "$output_doc"
-    benchmark '${line[@]^}'
+    benchmark '${line^}'
+    benchmark awk  'BEGIN { FS=OFS=" " } {for (i=1; i<=NF; ++i) { $i=toupper(substr($i,1,1)) tolower(substr($i,2)); } print }'
+
     ;;
 
   trim)
     #TIP: use «$script_prefix lowercase» to ...
     topic="Trim leading and trailing space"
     prep_input "$input"
-    before="    WORD        "
+    before="   This is sentence #1
+       And this is #2    "
     print_header "$action" "$output_doc"
     benchmark awk '{sub(/^[ \t\r\n]+/, ""); sub(/[ \t\r\n]+$/, ""); print}'
     benchmark sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
     benchmark xargs
-    benchmark php -r 'while($f = fgets(STDIN)){ print trim($f); }'
-    benchmark '${line#"${line%%[![:space:]]*}"}'
+    benchmark php -r 'while($f = fgets(STDIN)){ printf("%s\n", trim($f)) ; }'
+    benchmark '$(line="${line#"${line%%[![:space:]]*}"}"; echo "${line%"${line##*[![:space:]]}"}")'
     ;;
 
   chars)
@@ -114,13 +113,13 @@ main() {
     #TIP: use «$script_prefix lowercase» to ...
     topic="remove non-alphanumeric characters"
     prep_input "$input"
-    before="^1-2'3,4,5_6°8@9&0 (one){two}[three]"
+    before="Winter was the first! to? été     [go]"
     print_header "$action" "$output_doc"
-    benchmark awk '{gsub(/[^0-9a-zA-Z .-]/,""); print;}'
-    benchmark sed 's/[^0-9a-zA-Z .-]*//g'
-    benchmark sed 's/[^0-9a-zA-Z .-]//g'
-    benchmark tr -cd '0-9a-zA-Z .-'
-    benchmark tr -cd '[:alnum:][:blank:].-'
+    benchmark '${line//[^a-zA-Z0-9]/-}'
+    benchmark awk '{gsub(/[^0-9a-zA-Z .-]/,""); gsub(/[ ]+/,"-"); print;}'
+    benchmark sed -e 's/[^0-9a-zA-Z .-]*//g' -e 's/  */-/g'
+    benchmark sed -e 's/[^0-9a-zA-Z .-]//g' -e 's/  */-/g'
+    benchmark tr -cs '[:alnum:].-' '-'
     ;;
 
   romanize)
@@ -129,20 +128,41 @@ main() {
     prep_input "$input"
     before="ŁORÈM ÎPSÙM dôlõr sit amét œßþ"
     print_header "$action" "$output_doc"
-    benchmark awk '{
-      gsub(/[ğ]/,""); gsub(/[ÀÁÂÃÄÅĀĂĄǍ]/,"A"); gsub(/[Æ]/,"AE"); gsub(/[ÇĆČ]/,"C"); gsub(/[Č]/,"CH"); gsub(/[ÐĎ]/,"D");
-      gsub(/[ÈÉÊËĒĖĘĚ]/,"E"); gsub(/[Ģ]/,"G"); gsub(/[ÌÍÎÏĪĮǏ]/,"I"); gsub(/[Ķ]/,"K"); gsub(/[ĻŁ]/,"L"); gsub(/[ÑŅŇ]/,"N");
-      gsub(/[ÒÓÔÕÖØŌǑ]/,"O"); gsub(/[ØŒ]/,"OE"); gsub(/[Ř]/,"R"); gsub(/[Š]/,"S"); gsub(/[ŠȘ]/,"SH"); gsub(/[ẞ]/,"SS");
-      gsub(/[Ť]/,"T"); gsub(/[Þ]/,"TH"); gsub(/[Ț]/,"TS"); gsub(/[ÙÚÛÜŪŮŲǓǕǗǙǛ]/,"U"); gsub(/[ÝŸ]/,"Y"); gsub(/[ŹŻŽ]/,"Z");
-      gsub(/[Ž]/,"ZH"); gsub(/[àáâãäåāăąǎ]/,"a"); gsub(/[æ]/,"ae"); gsub(/[çćč]/,"c"); gsub(/[č]/,"ch"); gsub(/[ðďđ]/,"d");
-      gsub(/[èéêëēėęě]/,"e"); gsub(/[ģ]/,"g"); gsub(/[ìíîïīįıǐ]/,"i"); gsub(/[ķ]/,"k"); gsub(/[ĺļľł]/,"l"); gsub(/[ñńņň]/,"n");
-      gsub(/[òóôõöøōǒ]/,"o"); gsub(/[øœ]/,"oe"); gsub(/[ŕř]/,"r"); gsub(/[śš]/,"s"); gsub(/[şšș]/,"sh"); gsub(/[ß]/,"ss");
-      gsub(/[ť]/,"t"); gsub(/[þ]/,"th"); gsub(/[čț]/,"ts"); gsub(/[ùúûüūůųǔǖǘǚǜ]/,"u"); gsub(/[üýÿ]/,"y"); gsub(/[źżž]/,"z");
-      gsub(/[ž]/,"zh"); print $0; }'
+    benchmark awk '{ gsub(/[ğЪЬъь]/,""); gsub(/[ÀÁÂÃÄÅĀĂĄǍΑԱ]/,"A"); gsub(/[Æ]/,"AE");
+  gsub(/[БԲ]/,"B"); gsub(/[ÇĆČЦԾՉՑ]/,"C"); gsub(/[ČΧЧՃ]/,"CH");
+  gsub(/[ÐĎΔДԴ]/,"D"); gsub(/[ЏՁ]/,"DZ"); gsub(/[ÈÉÊËĒĖĘĚΕΗЁЕЭԵԷԸ]/,"E");
+  gsub(/[ԵՒ]/,"EW"); gsub(/[ЃФՖ]/,"F"); gsub(/[ĢΓГԳՂ]/,"G");
+  gsub(/[Հ]/,"H"); gsub(/[ÌÍÎÏĪĮǏΙИԻ]/,"I"); gsub(/[ЙՋ]/,"J");
+  gsub(/[ĶΚЌКԿՔ]/,"K"); gsub(/[Х]/,"KH"); gsub(/[ĻŁΛЛԼ]/,"L");
+  gsub(/[ΜМՄ]/,"M"); gsub(/[ÑŅŇΝНՆ]/,"N"); gsub(/[ÒÓÔÕÖØŌǑΟΩОՈՕ]/,"O");
+  gsub(/[ØŒ]/,"OE"); gsub(/[ΠПՊՓ]/,"P"); gsub(/[Φ]/,"PH");
+  gsub(/[Ψ]/,"PS"); gsub(/[ŘΡРՌՐ]/,"R"); gsub(/[ŠΣСՍ]/,"S");
+  gsub(/[Щ]/,"SCH"); gsub(/[ŠȘШՇ]/,"SH"); gsub(/[ẞ]/,"SS");
+  gsub(/[ŤΤТԹՏ]/,"T"); gsub(/[ÞΘ]/,"TH"); gsub(/[Ț]/,"TS");
+  gsub(/[ÙÚÛÜŪŮŲǓǕǗǙǛУՈՒ]/,"U"); gsub(/[ΒВՎ]/,"V"); gsub(/[ЎՒ]/,"W");
+  gsub(/[ΞԽ]/,"X"); gsub(/[ÝŸЫՅ]/,"Y"); gsub(/[Я]/,"YA");
+  gsub(/[Ю]/,"YU"); gsub(/[ŹŻŽΖЗԶԺ]/,"Z"); gsub(/[ŽЖ]/,"ZH");
+  gsub(/[àáâãäåāăąǎαա]/,"a"); gsub(/[æ]/,"ae"); gsub(/[бբ]/,"b");
+  gsub(/[çćčцћծչց]/,"c"); gsub(/[čχчճ]/,"ch"); gsub(/[ðďđδдђդ]/,"d");
+  gsub(/[џձ]/,"dz"); gsub(/[èéêëēėęěεηеэёեէը]/,"e"); gsub(/[և]/,"ew");
+  gsub(/[фѓֆ]/,"f"); gsub(/[ģγгգղ]/,"g"); gsub(/[հ]/,"h");
+  gsub(/[ìíîïīįıǐιиի]/,"i"); gsub(/[йջ]/,"j"); gsub(/[ķκкќկք]/,"k");
+  gsub(/[х]/,"kh"); gsub(/[ĺļľłλлլ]/,"l"); gsub(/[љ]/,"lj");
+  gsub(/[μмմ]/,"m"); gsub(/[ñńņňνнն]/,"n"); gsub(/[њ]/,"nj");
+  gsub(/[òóôõöøōǒοωоոօ]/,"o"); gsub(/[øœ]/,"oe"); gsub(/[πпպփ]/,"p");
+  gsub(/[φ]/,"ph"); gsub(/[ψ]/,"ps"); gsub(/[ŕřρрռր]/,"r");
+  gsub(/[śšσсս]/,"s"); gsub(/[щ]/,"sch"); gsub(/[şšșшշ]/,"sh");
+  gsub(/[ß]/,"ss"); gsub(/[ťτтթտ]/,"t"); gsub(/[þθ]/,"th");
+  gsub(/[čț]/,"ts"); gsub(/[ùúûüūůųǔǖǘǚǜуու]/,"u"); gsub(/[βвվ]/,"v");
+  gsub(/[ўւ]/,"w"); gsub(/[ξխ]/,"x"); gsub(/[üýÿыյ]/,"y");
+  gsub(/[я]/,"ya"); gsub(/[ю]/,"yu"); gsub(/[źżžζзզժ]/,"z");
+  gsub(/[žж]/,"zh"); print $0; }'
 
-    from="ÄÀÂÁÅĂÃĀǍĄÇĆČÐĎÉÈÊËĒĖĘĚĢÍÎÏĪĮÌǏĶŁĻÑŅŇÖÔÓÒØŌǑÕŘŠŤÜÙÛÚǓǕǗǙǛŪŲŮŸÝŽŹŻäàâáåąăãāǎçćčđðďéèêëęēėěģíîïīįìǐıķłļĺľñńņňöôóòøōǒõŕřšśťüùûúǔǖǘǚǜūųůÿýüžźż"
-    to="AAAAAAAAAACCCDDEEEEEEEEGIIIIIIIKLLNNNOOOOOOOORSTUUUUUUUUUUUUYYZZZaaaaaaaaaacccdddeeeeeeeegiiiiiiiikllllnnnnoooooooorrsstuuuuuuuuuuuuyyyzzz"
+
+          from="ÄÀÂΑÁÅĂÃĀǍĄԱБԲÇĆČЦԾՉՑΔÐДĎԴÉÈÊËΕΗĒĖĘĚЕЁЭԵԷԸЃФՖΓГĢԳՂՀΙÍÎÏĪĮÌǏИԻЙՋΚЌКĶԿՔΛŁЛĻԼΜМՄÑΝНŅŇՆÖÔΟΩÓÒØŌǑÕОՈՕΠПՊՓΡРŘՌՐΣСŠՍΤТŤԹՏÜÙÛÚǓǕǗǙǛŪУŲŮΒВՎЎՒΞԽŸÝЫՅΖŽŹŻЗԶԺäàâαáåąăãāǎաбբçćčћцծչցδđðђдďդéèêëεηęēėěеёэեէըѓфֆγгģգղհιíîïīįìǐиıիйջκќкķկքλłлļĺľլμмմñνńнņňնöôοωóòøōǒõоոօπпպփρрŕřռրσšśсսτтťթտüùûúǔǖǘǚǜūуųůβвվўւξխÿýыüյζžźżзզժ"
+            to="AAAAAAAAAAAABBCCCCCCCDDDDDEEEEEEEEEEEEEEEEFFFGGGGGHIIIIIIIIIIJJKKKKKKLLLLLMMMNNNNNNOOOOOOOOOOOOOPPPPRRRRRSSSSTTTTTUUUUUUUUUUUUUVVVWWXXYYYYZZZZZZZaaaaaaaaaaaabbccccccccdddddddeeeeeeeeeeeeeeeefffggggghiiiiiiiiiiijjkkkkkklllllllmmmnnnnnnnooooooooooooopppprrrrrrssssstttttuuuuuuuuuuuuuvvvwwxxyyyyyzzzzzzz"
     benchmark sed "y/$from/$to/"
+    benchmark sed -e 's/[ğЪЬъь]//g' -e 's/[ÀÁÂÃÄÅĀĂĄǍΑԱ]/A/g' -e 's/[Æ]/AE/g' -e 's/[БԲ]/B/g' -e 's/[ÇĆČЦԾՉՑ]/C/g' -e 's/[ČΧЧՃ]/CH/g' -e 's/[ÐĎΔДԴ]/D/g' -e 's/[ЏՁ]/DZ/g' -e 's/[ÈÉÊËĒĖĘĚΕΗЁЕЭԵԷԸ]/E/g' -e 's/[ԵՒ]/EW/g' -e 's/[ЃФՖ]/F/g' -e 's/[ĢΓГԳՂ]/G/g' -e 's/[Հ]/H/g' -e 's/[ÌÍÎÏĪĮǏΙИԻ]/I/g' -e 's/[ЙՋ]/J/g' -e 's/[ĶΚЌКԿՔ]/K/g' -e 's/[Х]/KH/g' -e 's/[ĻŁΛЛԼ]/L/g' -e 's/[ΜМՄ]/M/g' -e 's/[ÑŅŇΝНՆ]/N/g' -e 's/[ÒÓÔÕÖØŌǑΟΩОՈՕ]/O/g' -e 's/[ØŒ]/OE/g' -e 's/[ΠПՊՓ]/P/g' -e 's/[Φ]/PH/g' -e 's/[Ψ]/PS/g' -e 's/[ŘΡРՌՐ]/R/g' -e 's/[ŠΣСՍ]/S/g' -e 's/[Щ]/SCH/g' -e 's/[ŠȘШՇ]/SH/g' -e 's/[ẞ]/SS/g' -e 's/[ŤΤТԹՏ]/T/g' -e 's/[ÞΘ]/TH/g' -e 's/[Ț]/TS/g' -e 's/[ÙÚÛÜŪŮŲǓǕǗǙǛУՈՒ]/U/g' -e 's/[ΒВՎ]/V/g' -e 's/[ЎՒ]/W/g' -e 's/[ΞԽ]/X/g' -e 's/[ÝŸЫՅ]/Y/g' -e 's/[Я]/YA/g' -e 's/[Ю]/YU/g' -e 's/[ŹŻŽΖЗԶԺ]/Z/g' -e 's/[ŽЖ]/ZH/g' -e 's/[àáâãäåāăąǎαա]/a/g' -e 's/[æ]/ae/g' -e 's/[бբ]/b/g' -e 's/[çćčцћծչց]/c/g' -e 's/[čχчճ]/ch/g' -e 's/[ðďđδдђդ]/d/g' -e 's/[џձ]/dz/g' -e 's/[èéêëēėęěεηеэёեէը]/e/g' -e 's/[և]/ew/g' -e 's/[фѓֆ]/f/g' -e 's/[ģγгգղ]/g/g' -e 's/[հ]/h/g' -e 's/[ìíîïīįıǐιиի]/i/g' -e 's/[йջ]/j/g' -e 's/[ķκкќկք]/k/g' -e 's/[х]/kh/g' -e 's/[ĺļľłλлլ]/l/g' -e 's/[љ]/lj/g' -e 's/[μмմ]/m/g' -e 's/[ñńņňνнն]/n/g' -e 's/[њ]/nj/g' -e 's/[òóôõöøōǒοωоոօ]/o/g' -e 's/[øœ]/oe/g' -e 's/[πпպփ]/p/g' -e 's/[φ]/ph/g' -e 's/[ψ]/ps/g' -e 's/[ŕřρрռր]/r/g' -e 's/[śšσсս]/s/g' -e 's/[щ]/sch/g' -e 's/[şšșшշ]/sh/g' -e 's/[ß]/ss/g' -e 's/[ťτтթտ]/t/g' -e 's/[þθ]/th/g' -e 's/[čț]/ts/g' -e 's/[ùúûüūůųǔǖǘǚǜуու]/u/g' -e 's/[βвվ]/v/g' -e 's/[ўւ]/w/g' -e 's/[ξխ]/x/g' -e 's/[üýÿыյ]/y/g' -e 's/[я]/ya/g' -e 's/[ю]/yu/g' -e 's/[źżžζзզժ]/z/g' -e 's/[žж]/zh/g'
     benchmark tr "$from" "$to"
     benchmark iconv -f utf-8 -t ascii//TRANSLIT
     benchmark uni2ascii -B
@@ -152,19 +172,14 @@ main() {
     #TIP: use «$script_prefix romanize» to ...
     topic="Convert text to a slug"
     prep_input "$input"
-    before="(Demain, dès l'aube)"
+    before="  (Demain, dès l'aube)     "
     print_header "$action" "$output_doc"
-    benchmark awk '{
-      $0=tolower($0);
-      gsub(/[àáâãäåāăąǎ]/,"a"); gsub(/[æ]/,"ae"); gsub(/[çćč]/,"c"); gsub(/[č]/,"ch"); gsub(/[ðďđ]/,"d");
-      gsub(/[èéêëēėęě]/,"e"); gsub(/[ģ]/,"g"); gsub(/[ìíîïīįıǐ]/,"i"); gsub(/[ķ]/,"k"); gsub(/[ĺļľł]/,"l"); gsub(/[ñńņň]/,"n");
-      gsub(/[òóôõöøōǒ]/,"o"); gsub(/[øœ]/,"oe"); gsub(/[ŕř]/,"r"); gsub(/[śš]/,"s"); gsub(/[şšș]/,"sh"); gsub(/[ß]/,"ss");
-      gsub(/[ť]/,"t"); gsub(/[þ]/,"th"); gsub(/[čț]/,"ts"); gsub(/[ùúûüūůųǔǖǘǚǜ]/,"u"); gsub(/[üýÿ]/,"y"); gsub(/[źżž]/,"z");
-      gsub(/[ž]/,"zh");
-      gsub(/[^0-9a-zA-Z .-]*/,"");
-      sub(/^[ \t\r\n]+/, ""); sub(/[ \t\r\n]+$/, "");
-      gsub(/ /,"-");
-      print $0; }'
+    benchmark awk '{gsub(/[^0-9a-zA-Z .-]/,""); gsub(/^[ \t\r\n]+/, ""); gsub(/[ \t\r\n]+$/, ""); gsub(/[ ]+/,"-"); print;}'
+    benchmark sed -e 's/[^0-9a-zA-Z .-]*//g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/  */-/g'
+    benchmark sed -e 's/[^0-9a-zA-Z .-]//g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/  */-/g'
+    benchmark tr -cs '[:alnum:].-' '-'
+    benchmark '${line//[^a-zA-Z0-9]/-}'
+    benchmark '$(line="${line//[^a-zA-Z0-9 ]/}"; line="${line%"${line##*[![:space:]]}"}"; line="${line#"${line%%[![:space:]]*}"}"; echo "${line// /-}")'
 
     ;;
 
@@ -229,14 +244,18 @@ function benchmark() {
     full_command=$(tr <<<"$*" "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
     echo '```'
     echo "Command: '$full_command'"
+    LC_ALL=C
+    export LC_ALL
     # shellcheck disable=SC2154
     if [[ ${1:0:1} == '$' ]]; then
-      echo "Result: '$before' => '$(
+      echo "Before: '$before'"
+      echo "After : '$(
         line="$before"
         eval "echo $*"
       )'"
     else
-      echo "Result: '$before' => '$("$@" <<<"$before" 2>/dev/null)'"
+      echo "Before: '$before'"
+      echo "After : '$("$@" <<<"$before" 2>/dev/null)'"
     fi
     echo '```'
 
@@ -294,6 +313,15 @@ function microtime() {
   else
     date "+%s.%N" | awk '{printf("%.3f",$1)}'
   fi
+}
+
+trim() {
+    local var="$*"
+    # remove leading whitespace characters
+    var="${var#"${var%%[![:space:]]*}"}"
+    # remove trailing whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"
+    printf '%s' "$var"
 }
 
 #####################################################################

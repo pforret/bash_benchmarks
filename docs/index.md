@@ -30,8 +30,8 @@
 * fastest throughput is `sed 'y/.../.../`
 * fastest invocation is `tr '...' '...'`
 
-## [Filter alphanumeric](alpha.md)
+## [Slugify text](slugify.md)
 * **remove all characters that are not in the range [a-zA-Z0-9 -]**
-* effect: '^1-2'3,4,5_6°8@9&0 (one){two}[three]' => '1-23456890 onetwothree'
-* fastest throughput is `awk '{gsub(/[^0-9a-zA-Z .-]/,""); print;}'`
-* fastest invocation is `tr -cd '0-9a-zA-Z .-'`
+* effect: '  (Demain, dès l'aube)     ' => 'Demain-ds-laube'
+* fastest throughput is `awk`
+* fastest invocation is `${}`

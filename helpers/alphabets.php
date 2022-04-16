@@ -127,6 +127,14 @@ foreach($mapping as $mapped_to => $list){
 }
 print "print $0; }'\n\n";
 
+print "# using AWK\n";
+print "sed ";
+foreach($mapping as $mapped_to => $list){
+    sort($list);
+    printf("-e 's/[%s]/%s/g' ",implode("",$list),$mapped_to);
+}
+print "\n\n";
+
 $from="";
 $to="";
 foreach($mapping as $mapped_to => $list){
