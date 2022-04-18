@@ -24,7 +24,7 @@ option|t|tmp_dir|folder for temp files|/tmp/$script_prefix
 option|b|before|text to transform|  [ÎńtérNäTÌÕNãl] 'like' Eλλη
 option|o|out_dir|folder for output reports|docs
 option|i|in_file|input file (generated before the benchmark)|$script_prefix.input.txt
-choice|1|action|action to perform|alpha,chars,copy,lowercase,romanize,slugify,titlecase,trim,uppercase,check,env,update
+choice|1|action|action to perform|alpha,chars,copy,gtr,hash,lowercase,romanize,slugify,titlecase,trim,uppercase,check,env,update
 " | grep -v '^#' | grep -v '^\s*$'
 }
 
@@ -124,6 +124,45 @@ main() {
     benchmark sed -e 's/[^0-9a-zA-Z .-]//g' -e 's/  */-/g'
     benchmark tr -cs '[:alnum:].-' '-'
     benchmark gtr -cs '[:alnum:].-' '-'
+    ;;
+
+  gtr)
+    #TIP: use «$script_prefix gtr» to benchmark tr vs gtr speed
+    topic="Standard MacOS tr vs Gnu gtr"
+    prep_input "$input"
+    before="LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT"
+    print_header "$action" "$output_doc"
+    benchmark tr "[:upper:]" "[:lower:]"
+    benchmark gtr "[:upper:]" "[:lower:]"
+    before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT ŒßÞ"
+    benchmark tr "[:upper:]" "[:lower:]"
+    benchmark gtr "[:upper:]" "[:lower:]"
+    benchmark tr -cs '[:alnum:].-' '-'
+    benchmark gtr -cs '[:alnum:].-' '-'
+    from="ÄÀÂΑÁÅĂÃĀǍĄԱБԲÇĆČЦԾՉՑΔÐДĎԴÉÈÊËΕΗĒĖĘĚЕЁЭԵԷԸЃФՖΓГĢԳՂՀΙÍÎÏĪĮÌǏИԻЙՋΚЌКĶԿՔΛŁЛĻԼΜМՄÑΝНŅŇՆÖÔΟΩÓÒØŌǑÕОՈՕΠПՊՓΡРŘՌՐΣСŠՍΤТŤԹՏÜÙÛÚǓǕǗǙǛŪУŲŮΒВՎЎՒΞԽŸÝЫՅΖŽŹŻЗԶԺäàâαáåąăãāǎաбբçćčћцծչցδđðђдďդéèêëεηęēėěеёэեէըѓфֆγгģգղհιíîïīįìǐиıիйջκќкķկքλłлļĺľլμмմñνńнņňնöôοωóòøōǒõоոօπпպփρрŕřռրσšśсսτтťթտüùûúǔǖǘǚǜūуųůβвվўւξխÿýыüյζžźżзզժ"
+      to="AAAAAAAAAAAABBCCCCCCCDDDDDEEEEEEEEEEEEEEEEFFFGGGGGHIIIIIIIIIIJJKKKKKKLLLLLMMMNNNNNNOOOOOOOOOOOOOPPPPRRRRRSSSSTTTTTUUUUUUUUUUUUUVVVWWXXYYYYZZZZZZZaaaaaaaaaaaabbccccccccdddddddeeeeeeeeeeeeeeeefffggggghiiiiiiiiiiijjkkkkkklllllllmmmnnnnnnnooooooooooooopppprrrrrrssssstttttuuuuuuuuuuuuuvvvwwxxyyyyyzzzzzzz"
+    benchmark tr "$from" "$to"
+    benchmark gtr "$from" "$to"
+    ;;
+
+  hash)
+    #TIP: use «$script_prefix gtr» to benchmark tr vs gtr speed
+    topic="Standard MacOS tr vs Gnu gtr"
+    prep_input "$input"
+    before="ŁORÈM ÎPSÙM DÔLÕR SIT AMÉT ŒßÞ"
+    print_header "$action" "$output_doc"
+    benchmark md5
+    benchmark gmd5sum
+    benchmark sha1sum
+    benchmark sha256sum
+    benchmark sha224sum
+    benchmark sha384sum
+    benchmark sha512sum
+    benchmark sha512sum -b
+    benchmark sha512sum -t
+    benchmark b2sum
+    benchmark b2sum -b
+
     ;;
 
   romanize)
@@ -237,9 +276,9 @@ function print_header() {
   (
     echo "# $1"
     echo " "
-    echo "> run at $(date)"
-    echo "> run on $os_name $os_version $os_machine $os_kernel"
-    echo "> benchmark v$script_version"
+    echo "    run at $(date)"
+    echo "    run on $os_name $os_version $os_machine $os_kernel"
+    echo "    benchmark v$script_version"
     echo " "
   ) | tee "$2"
 
@@ -265,21 +304,24 @@ function benchmark() {
     echo "### $topic: using \`$1\`"
     local full_command
     full_command=$(tr <<<"$*" "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
-    echo '```'
+    echo '```shell'
     echo "Command: '$full_command'"
-    LC_ALL=C
-    export LC_ALL
+    if [[ $1 == "sed" ]] ; then
+      LC_ALL=C
+      export LC_ALL
+    fi
+
     # shellcheck disable=SC2154
     if [[ ${1:0:1} == '$' ]]; then
       echo "Before: '$before'"
       echo "After : '$(
         line="$before"
         eval "echo $*"
-      )'"
+      )' (LANG = $LANG)"
       echo '```'
     else
       echo "Before: '$before'"
-      echo "After : '$("$@" <<<"$before" 2>/dev/null)'"
+      echo "After : '$("$@" <<<"$before" 2>/dev/null)'  (LANG = $LC_ALL)"
       echo '```'
       binary=$(which "$1")
       echo "* Binary: $(recursive_readlink "$binary")"
