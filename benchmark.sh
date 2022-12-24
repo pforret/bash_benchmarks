@@ -131,11 +131,13 @@ main() {
     before=""
     topic="unix epoch time with milli/microseconds"
     print_header "$action" "$output_doc"
-    benchmark perl -MTime::HiRes=time -e 'printf "%.3f\n", time'
-    benchmark php -r 'echo microtime(true) . "\n"; '
+    benchmark perl -MTime::HiRes=time -e 'printf "%f\n", time'
+    benchmark php -r 'printf("%f\n",microtime(true));'
     benchmark python3 -c 'import time; print(time.time()) '
     benchmark node -e 'console.log(+new Date() / 1000)'
-    benchmark date '+%s.000'
+    benchmark ruby -e 'STDOUT.puts(Time.now.to_f)'
+    benchmark golang/microtime
+    benchmark date '+%s.%N'
     ;;
 
   gtr)
@@ -314,6 +316,7 @@ function benchmark() {
   (
     ## explain the method
     echo "### $topic: using \`$1\`"
+    echo "    (LANG = ${LC_ALL:-$LANG})"
     local full_command
     full_command=$(tr <<<"$*" "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
     echo '```shell'
@@ -332,8 +335,8 @@ function benchmark() {
       )' (LANG = $LANG)"
       echo '```'
     else
-      echo "Before: '$before'"
-      echo "After : '$("$@" <<<"$before" 2>/dev/null)'  (LANG = ${LC_ALL:-$LANG})"
+      [[ -n "$before" ]] && echo "Before: '$before'"
+      echo "After : '$("$@" <<<"$before" 2>/dev/null)'"
       echo '```'
       binary=$(which "$1")
       echo "* Binary: $(recursive_readlink "$binary")"
@@ -378,7 +381,7 @@ function benchmark() {
 
     t1=$(microtime)
     debug "$nb_invocations invocations in ($t1 - $t0) seconds"
-    awk <<<"$t0 $t1" -v nb=$nb_invocations '{printf("`%.0f ops/sec`\n\n",nb/($2 - $1)); }'
+    awk <<<"$t0 $t1" -v nb=$nb_invocations '{printf("`%.0f ops/sec (%.2f millisec)`\n\n",nb/($2 - $1),1000*($2 - $1)/nb); }'
   ) | tee -a "$output_doc"
 }
 
