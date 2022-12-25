@@ -158,10 +158,7 @@ main() {
     benchmark sha224sum
     benchmark sha384sum
     benchmark sha512sum
-    benchmark sha512sum -b
-    benchmark sha512sum -t
     benchmark b2sum
-    benchmark b2sum -b
 
     ;;
 
