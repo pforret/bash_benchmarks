@@ -6,3 +6,4 @@
 ./benchmark.sh slugify
 ./benchmark.sh trim
 ./benchmark.sh uppercase
+./benchmark.sh epoch

@@ -1,83 +1,82 @@
 # epoch
  
-    run at Sat Dec 24 10:01:34 PM CET 2022
-    run on Ubuntu 22.04 x86_64 Linux
-    benchmark v0.6.4
+    run at Sun Dec 25 18:49:46 CET 2022
+    run on macOS 13.0.1 arm64 Darwin
+    benchmark v0.6.5
  
 ### unix epoch time with milli/microseconds: using `perl`
     (LANG = en_US.UTF-8)
 ```shell
-Command: 'perl -MTime::HiRes=time -e printf "%.3f\n", time'
-After : '1671915694.758'
+Command: 'perl -MTime::HiRes=time -e printf "%f\n", time'
+After : '1671990586.560318'
 ```
 * Binary: /usr/bin/perl
 * Version: 
-* Throughput speed: `2564 MB/sec`
-* Invocation speed: `279 ops/sec (3.59 millisec)`
+* Throughput speed: `1250 MB/sec`
+* Invocation speed: `146 ops/sec (6.85 millisec)`
 
 ### unix epoch time with milli/microseconds: using `php`
     (LANG = en_US.UTF-8)
 ```shell
-Command: 'php -r echo microtime(true) . "\n";'
-After : '1671915698.4222'
+Command: 'php -r printf("%f\n",microtime(true));'
+After : '1671990593.557677'
 ```
-* Binary: /usr/bin/php8.2
-* Version: PHP 8.2.0 (cli) (built: Dec 10 2022 10:53:01) (NTS)
-* Throughput speed: `1163 MB/sec`
-* Invocation speed: `125 ops/sec (7.98 millisec)`
+* Binary: /opt/homebrew/Cellar/php/8.1.11/bin/php
+* Version: PHP 8.1.11 (cli) (built: Sep 29 2022 19:44:28) (NTS)
+* Throughput speed: `474 MB/sec`
+* Invocation speed: `50 ops/sec (20.17 millisec)`
 
 ### unix epoch time with milli/microseconds: using `python3`
     (LANG = en_US.UTF-8)
 ```shell
 Command: 'python3 -c import time; print(time.time())'
-After : '1671915706.5482023'
+After : '1671990614.045855'
 ```
-* Binary: /usr/bin/python3.10
-* Version: Python 3.10.6
-* Throughput speed: `1370 MB/sec`
-* Invocation speed: `152 ops/sec (6.58 millisec)`
+* Binary: /opt/homebrew/Cellar/python@3.10/3.10.8/Frameworks/Python.framework/Versions/3.10/bin/python3.10
+* Version: Python 3.10.8
+* Throughput speed: `543 MB/sec`
+* Invocation speed: `57 ops/sec (17.41 millisec)`
 
 ### unix epoch time with milli/microseconds: using `node`
     (LANG = en_US.UTF-8)
 ```shell
 Command: 'node -e console.log(+new Date() / 1000)'
-After : '1671915713.284'
+After : '1671990631.748'
 ```
-* Binary: /usr/bin/node
-* Version: v12.22.9
-* Throughput speed: `218 MB/sec`
-* Invocation speed: `20 ops/sec (48.80 millisec)`
+* Binary: /opt/homebrew/Cellar/node/18.11.0/bin/node
+* Version: v18.11.0
+* Throughput speed: `263 MB/sec`
+* Invocation speed: `27 ops/sec (37.49 millisec)`
 
 ### unix epoch time with milli/microseconds: using `ruby`
     (LANG = en_US.UTF-8)
 ```shell
 Command: 'ruby -e STDOUT.puts(Time.now.to_f)'
-After : '1671915762.6370661'
+After : '1671990669.741518'
 ```
-* Binary: /usr/bin/ruby3.0
-* Version: ruby 3.0.2p107 (2021-07-07 revision 0db68f0233) [x86_64-linux-gnu]
-* Throughput speed: `119 MB/sec`
-* Invocation speed: `30 ops/sec (32.80 millisec)`
+* Binary: /opt/homebrew/opt/ruby/bin/ruby
+* Version: ruby 3.1.2p20 (2022-04-12 revision 4491bb740a) [arm64-darwin21]
+* Throughput speed: `282 MB/sec`
+* Invocation speed: `29 ops/sec (34.61 millisec)`
 
 ### unix epoch time with milli/microseconds: using `golang/microtime`
     (LANG = en_US.UTF-8)
 ```shell
 Command: 'golang/microtime'
-After : '1671915796.365730'
+After : '1671990705.127582'
 ```
 * Binary: golang/microtime
-* Version: 1671915796.417813
-* Throughput speed: `420 MB/sec`
-* Invocation speed: `45 ops/sec (22.37 millisec)`
+* Version: 1671990705.142990
+* Throughput speed: `3125 MB/sec`
+* Invocation speed: `565 ops/sec (1.77 millisec)`
 
 ### unix epoch time with milli/microseconds: using `date`
     (LANG = en_US.UTF-8)
 ```shell
 Command: 'date +%s.%N'
-After : '1671915819.046840462'
+After : '1671990706.N'
 ```
-* Binary: /usr/bin/date
-* Version: date (GNU coreutils) 8.32
-* Throughput speed: `10000 MB/sec`
-* Invocation speed: `1616 ops/sec (0.62 millisec)`
+* Binary: /bin/date
+* Throughput speed: `4167 MB/sec`
+* Invocation speed: `730 ops/sec (1.37 millisec)`
 

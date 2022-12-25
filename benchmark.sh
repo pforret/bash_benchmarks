@@ -35,8 +35,10 @@ choice|1|action|action to perform|alpha,chars,copy,gtr,hash,lowercase,romanize,s
 main() {
   log_to_file "[$script_basename] $script_version started"
   # shellcheck disable=SC2154
-  output_doc="$out_dir/$action.md"
-  debug "OUTPUT = $output_doc"
+  output_system="$out_dir/${os_name}_${os_version}_${os_machine}"
+  [[ ! -d "$output_system" ]] && mkdir "$output_system"
+  output_doc="$output_system/$action.md"
+  out "OUTPUT = $output_doc"
   # shellcheck disable=SC2154
   input="$tmp_dir/$in_file"
   debug "INPUT  = $input"
@@ -290,6 +292,7 @@ function print_header() {
     echo "    run at $(date)"
     echo "    run on $os_name $os_version $os_machine $os_kernel"
     echo "    benchmark v$script_version"
+    echo "    LANG = ${LC_ALL:-$LANG}"
     echo " "
   ) | tee "$2"
 
@@ -302,7 +305,7 @@ function prep_input() {
   LC_ALL=C tr -cd '[:alnum:][ ,.]' </dev/urandom |
     fold -w "$nb_chars" |
     head -n "$nb_lines" >"$file"
-  debug "Created input file [$file]: $(filesize $file) bytes"
+  debug "Created input file [$file]: $(filesize "$file") bytes"
 }
 
 function filesize() {
@@ -313,7 +316,6 @@ function benchmark() {
   (
     ## explain the method
     echo "### $topic: using \`$1\`"
-    echo "    (LANG = ${LC_ALL:-$LANG})"
     local full_command
     full_command=$(tr <<<"$*" "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
     echo '```shell'
