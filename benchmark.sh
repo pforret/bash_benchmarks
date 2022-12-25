@@ -24,7 +24,7 @@ option|t|tmp_dir|folder for temp files|/tmp/$script_prefix
 option|b|before|text to transform|  [ÎńtérNäTÌÕNãl] 'like' Eλλη
 option|o|out_dir|folder for output reports|docs
 option|i|in_file|input file (generated before the benchmark)|$script_prefix.input.txt
-choice|1|action|action to perform|alpha,chars,copy,gtr,hash,lowercase,romanize,slugify,titlecase,trim,uppercase,check,env,update
+choice|1|action|action to perform|alpha,chars,copy,gtr,hash,lowercase,romanize,slugify,titlecase,trim,uppercase,epoch,check,env,update
 " | grep -v '^#' | grep -v '^\s*$'
 }
 
@@ -124,6 +124,20 @@ main() {
     benchmark sed -e 's/[^0-9a-zA-Z .-]//g' -e 's/  */-/g'
     benchmark tr -cs '[:alnum:].-' '-'
     benchmark gtr -cs '[:alnum:].-' '-'
+    ;;
+
+  epoch)
+    #TIP: use «$script_prefix lowercase» to ...
+    before=""
+    topic="unix epoch time with milli/microseconds"
+    print_header "$action" "$output_doc"
+    benchmark perl -MTime::HiRes=time -e 'printf "%f\n", time'
+    benchmark php -r 'printf("%f\n",microtime(true));'
+    benchmark python3 -c 'import time; print(time.time()) '
+    benchmark node -e 'console.log(+new Date() / 1000)'
+    benchmark ruby -e 'STDOUT.puts(Time.now.to_f)'
+    benchmark golang/microtime
+    benchmark date '+%s.%N'
     ;;
 
   gtr)
@@ -299,6 +313,7 @@ function benchmark() {
   (
     ## explain the method
     echo "### $topic: using \`$1\`"
+    echo "    (LANG = ${LC_ALL:-$LANG})"
     local full_command
     full_command=$(tr <<<"$*" "\n" " " | awk '{ gsub(/\t/," "); gsub(/\s\s+/," "); sub(/[ \t\r\n]+$/, ""); if(length($0)>60) {print substr($0,1,60) "..."} else {print} }')
     echo '```shell'
@@ -317,8 +332,8 @@ function benchmark() {
       )' (LANG = $LANG)"
       echo '```'
     else
-      echo "Before: '$before'"
-      echo "After : '$("$@" <<<"$before" 2>/dev/null)'  (LANG = $LC_ALL)"
+      [[ -n "$before" ]] && echo "Before: '$before'"
+      echo "After : '$("$@" <<<"$before" 2>/dev/null)'"
       echo '```'
       binary=$(which "$1")
       echo "* Binary: $(recursive_readlink "$binary")"
@@ -363,7 +378,7 @@ function benchmark() {
 
     t1=$(microtime)
     debug "$nb_invocations invocations in ($t1 - $t0) seconds"
-    awk <<<"$t0 $t1" -v nb=$nb_invocations '{printf("`%.0f ops/sec`\n\n",nb/($2 - $1)); }'
+    awk <<<"$t0 $t1" -v nb=$nb_invocations '{printf("`%.0f ops/sec (%.2f millisec)`\n\n",nb/($2 - $1),1000*($2 - $1)/nb); }'
   ) | tee -a "$output_doc"
 }
 
