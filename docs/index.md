@@ -27,7 +27,3 @@
 ## [Just copy](copy.md)
 * **remove all characters that are not in the range [a-zA-Z0-9 -]**
 * example: `'  (Demain, dès l'aube)     ' => 'Demain-ds-laube'`
-
-## [tr vs gtr](gtr.md)
-* **compare speed and behaviour between `tr`and `gtr`**
-
