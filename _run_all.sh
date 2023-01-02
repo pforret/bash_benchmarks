@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 ./benchmark.sh chars
 ./benchmark.sh copy
+./benchmark.sh epoch
+./benchmark.sh gtr
+./benchmark.sh hash
 ./benchmark.sh lowercase
 ./benchmark.sh romanize
 ./benchmark.sh slugify
+./benchmark.sh titlecase
 ./benchmark.sh trim
 ./benchmark.sh uppercase
-./benchmark.sh epoch

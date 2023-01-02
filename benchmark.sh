@@ -85,11 +85,12 @@ main() {
     print_header "$action" "$output_doc"
     benchmark '${line^}'
     benchmark awk  'BEGIN { FS=OFS=" " } {for (i=1; i<=NF; ++i) { $i=toupper(substr($i,1,1)) tolower(substr($i,2)); } print }'
+    benchmark php -r 'while($f = fgets(STDIN)){ printf("%s\n", mb_convert_case($f,MB_CASE_TITLE)) ; }'
 
     ;;
 
   trim)
-    #TIP: use «$script_prefix lowercase» to ...
+    #TIP: use «$script_prefix trim» to ...
     topic="Trim leading and trailing space"
     prep_input "$input"
     before="   This is sentence #1
@@ -103,7 +104,7 @@ main() {
     ;;
 
   chars)
-    #TIP: use «$script_prefix lowercase» to ...
+    #TIP: use «$script_prefix chars» to ...
     topic="cut the first 20 characters of each line"
     prep_input "$input"
     before="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
@@ -115,7 +116,7 @@ main() {
     ;;
 
   alpha)
-    #TIP: use «$script_prefix lowercase» to ...
+    #TIP: use «$script_prefix alpha» to ...
     topic="remove non-alphanumeric characters"
     prep_input "$input"
     before="Winter was the first! to? été     [go]"
@@ -139,6 +140,9 @@ main() {
     benchmark node -e 'console.log(+new Date() / 1000)'
     benchmark ruby -e 'STDOUT.puts(Time.now.to_f)'
     benchmark golang/microtime
+    benchmark gosh microtime true
+    benchmark go run golang/microtime.go
+    benchmark gdate '+%s.%N'
     benchmark date '+%s.%N'
     ;;
 
@@ -222,6 +226,7 @@ main() {
     benchmark tr "$from" "$to"
     benchmark gtr "$from" "$to"
     benchmark iconv -f utf-8 -t ascii//TRANSLIT
+    benchmark gosh ascii
     benchmark uni2ascii -B
     ;;
 
@@ -236,13 +241,14 @@ main() {
     benchmark sed -e 's/[^0-9a-zA-Z .-]//g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/  */-/g'
     benchmark tr -cs '[:alnum:].-' '-'
     benchmark gtr -cs '[:alnum:].-' '-'
+    benchmark gosh slug
     benchmark '${line//[^a-zA-Z0-9]/-}'
     benchmark '$(line="${line//[^a-zA-Z0-9 ]/}"; line="${line%"${line##*[![:space:]]}"}"; line="${line#"${line%%[![:space:]]*}"}"; echo "${line// /-}")'
   ;;
 
   copy)
     #TIP: use «$script_prefix nothing» to ...
-    topic="Just opy from stdin to stdout"
+    topic="Just copy from stdin to stdout"
     prep_input "$input"
     before="Lorem îpsûm 1 2 3   "
     print_header "$action" "$output_doc"
@@ -338,7 +344,9 @@ function benchmark() {
       echo "After : '$("$@" <<<"$before" 2>/dev/null)'"
       echo '```'
       binary=$(which "$1")
-      echo "* Binary: $(recursive_readlink "$binary")"
+      binpath=$(recursive_readlink "$binary")
+      binsize=$(du -h "$binpath" | awk '{print $1}')
+      echo "* Binary: $binpath ($binsize)"
       "$binary" --version &> /dev/null && echo "* Version: $("$binary" --version 2>&1 | head -1)"
     fi
 

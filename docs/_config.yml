@@ -1,4 +1,17 @@
+title: Bash Benchmarks
+email: peter@forret.com
+description: >- # this means to ignore newlines until "baseurl:"
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+baseurl: "bash_benchmarks" # the subpath of your site, e.g. /blog
+url: "https://pforret.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: pforret
+github_username:  pforret
+
+# Build settings
 theme: jekyll-theme-cayman
 google_analytics: G-TR8NTB5WL0
-gems:
+plugins:
+  - jekyll-feed
   - jekyll-toc

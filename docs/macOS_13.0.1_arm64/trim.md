@@ -1,8 +1,8 @@
 # trim
  
-    run at Sun Dec 25 19:50:56 CET 2022
+    run at Sun Jan  1 17:00:30 CET 2023
     run on macOS 13.0.1 arm64 Darwin
-    benchmark v0.6.5
+    benchmark v0.6.6
     LANG = en_US.UTF-8
  
 ### Trim leading and trailing space: using `awk`
@@ -13,10 +13,10 @@ Before: '   This is sentence #1
 After : 'This is sentence #1
 And this is #2'
 ```
-* Binary: /opt/homebrew/Cellar/gawk/5.2.0/bin/gawk
+* Binary: /opt/homebrew/Cellar/gawk/5.2.0/bin/gawk (652K)
 * Version: GNU Awk 5.2.0, API 3.2, (GNU MPFR 4.1.0-p13, GNU MP 6.2.1)
-* Throughput speed: `290 MB/sec`
-* Invocation speed: `209 ops/sec (4.79 millisec)`
+* Throughput speed: `292 MB/sec`
+* Invocation speed: `211 ops/sec (4.74 millisec)`
 
 ### Trim leading and trailing space: using `sed`
 ```shell
@@ -26,9 +26,9 @@ Before: '   This is sentence #1
 After : 'This is sentence #1
 And this is #2'
 ```
-* Binary: /usr/bin/sed
+* Binary: /usr/bin/sed (44K)
 * Throughput speed: `58 MB/sec`
-* Invocation speed: `935 ops/sec (1.07 millisec)`
+* Invocation speed: `1 ops/sec (899.36 millisec)`
 
 ### Trim leading and trailing space: using `xargs`
 ```shell
@@ -37,9 +37,9 @@ Before: '   This is sentence #1
        And this is #2    '
 After : 'This is sentence #1 And this is #2'
 ```
-* Binary: /usr/bin/xargs
+* Binary: /usr/bin/xargs (24K)
 * Throughput speed: `19 MB/sec`
-* Invocation speed: `525 ops/sec (1.90 millisec)`
+* Invocation speed: `526 ops/sec (1.90 millisec)`
 
 ### Trim leading and trailing space: using `php`
 ```shell
@@ -49,10 +49,10 @@ Before: '   This is sentence #1
 After : 'This is sentence #1
 And this is #2'
 ```
-* Binary: /opt/homebrew/Cellar/php/8.2.0/bin/php
+* Binary: /opt/homebrew/Cellar/php/8.2.0/bin/php (15M)
 * Version: PHP 8.2.0 (cli) (built: Dec  9 2022 16:30:32) (NTS)
-* Throughput speed: `199 MB/sec`
-* Invocation speed: `50 ops/sec (20.01 millisec)`
+* Throughput speed: `203 MB/sec`
+* Invocation speed: `51 ops/sec (19.60 millisec)`
 
 ### Trim leading and trailing space: using `$(line="${line#"${line%%[![:space:]]*}"}"; echo "${line%"${line##*[![:space:]]}"}")`
 ```shell
@@ -61,6 +61,6 @@ Before: '   This is sentence #1
        And this is #2    '
 After : 'This is sentence #1        And this is #2' (LANG = en_US.UTF-8)
 ```
-* Throughput speed: `4 MB/sec`
-* Invocation speed: `1715 ops/sec (0.58 millisec)`
+* Throughput speed: `5 MB/sec`
+* Invocation speed: `1642 ops/sec (0.61 millisec)`
 
