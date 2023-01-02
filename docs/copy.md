@@ -1,85 +1,68 @@
 # copy
  
-    run at Sun Dec 25 18:35:12 CET 2022
+    run at Mon Jan  2 21:27:54 CET 2023
     run on macOS 13.0.1 arm64 Darwin
-    benchmark v0.6.5
+    benchmark v0.6.7
+    LANG = en_US.UTF-8
  
-### Just opy from stdin to stdout: using `awk`
-    (LANG = en_US.UTF-8)
+### Just copy from stdin to stdout: using `awk`
 ```shell
 Command: 'awk {print;}'
 Before: 'Lorem îpsûm 1 2 3   '
 After : 'Lorem îpsûm 1 2 3   '
 ```
-* Binary: /opt/homebrew/Cellar/gawk/5.2.0/bin/gawk
+* Binary: /opt/homebrew/Cellar/gawk/5.2.0/bin/gawk (652K)
 * Version: GNU Awk 5.2.0, API 3.2, (GNU MPFR 4.1.0-p13, GNU MP 6.2.1)
-* Throughput speed: `546 MB/sec`
-* Invocation speed: `215 ops/sec (4.64 millisec)`
+* Throughput speed: `532 MB/sec`
+* Invocation speed: `209 ops/sec (4.78 millisec)`
 
-### Just opy from stdin to stdout: using `cat`
-    (LANG = en_US.UTF-8)
+### Just copy from stdin to stdout: using `cat`
 ```shell
 Command: 'cat'
 Before: 'Lorem îpsûm 1 2 3   '
 After : 'Lorem îpsûm 1 2 3   '
 ```
-* Binary: /bin/cat
+* Binary: /bin/cat (16K)
 * Throughput speed: `3125 MB/sec`
-* Invocation speed: `816 ops/sec (1.22 millisec)`
+* Invocation speed: `839 ops/sec (1.19 millisec)`
 
-### Just opy from stdin to stdout: using `gcat`
-    (LANG = en_US.UTF-8)
+### Just copy from stdin to stdout: using `gcat`
 ```shell
 Command: 'gcat'
 Before: 'Lorem îpsûm 1 2 3   '
 After : 'Lorem îpsûm 1 2 3   '
 ```
-* Binary: /opt/homebrew/Cellar/coreutils/9.1/bin/gcat
+* Binary: /opt/homebrew/Cellar/coreutils/9.1/bin/gcat (92K)
 * Version: cat (GNU coreutils) 9.1
-* Throughput speed: `3030 MB/sec`
-* Invocation speed: `687 ops/sec (1.45 millisec)`
+* Throughput speed: `2941 MB/sec`
+* Invocation speed: `691 ops/sec (1.45 millisec)`
 
-### Just opy from stdin to stdout: using `tr`
-    (LANG = en_US.UTF-8)
+### Just copy from stdin to stdout: using `tr`
 ```shell
 Command: 'tr a a'
 Before: 'Lorem îpsûm 1 2 3   '
 After : 'Lorem îpsûm 1 2 3   '
 ```
-* Binary: /usr/bin/tr
+* Binary: /usr/bin/tr (24K)
 * Throughput speed: `25 MB/sec`
-* Invocation speed: `756 ops/sec (1.32 millisec)`
+* Invocation speed: `761 ops/sec (1.31 millisec)`
 
-### Just opy from stdin to stdout: using `gtr`
-    (LANG = en_US.UTF-8)
-```shell
-Command: 'gtr a a'
-Before: 'Lorem îpsûm 1 2 3   '
-After : 'Lorem îpsûm 1 2 3   '
-```
-* Binary: /opt/homebrew/Cellar/coreutils/9.1/bin/gtr
-* Version: tr (GNU coreutils) 9.1
-* Throughput speed: `862 MB/sec`
-* Invocation speed: `698 ops/sec (1.43 millisec)`
-
-### Just opy from stdin to stdout: using `sed`
-    (LANG = en_US.UTF-8)
+### Just copy from stdin to stdout: using `sed`
 ```shell
 Command: 'sed s/a/a/'
 Before: 'Lorem îpsûm 1 2 3   '
 After : 'Lorem îpsûm 1 2 3   '
 ```
-* Binary: /usr/bin/sed
-* Throughput speed: `588 MB/sec`
-* Invocation speed: `876 ops/sec (1.14 millisec)`
+* Binary: /usr/bin/sed (44K)
+* Throughput speed: `581 MB/sec`
+* Invocation speed: `893 ops/sec (1.12 millisec)`
 
-### Just opy from stdin to stdout: using `${line}`
-    (LANG = en_US.UTF-8)
+### Just copy from stdin to stdout: using `${line}`
 ```shell
 Command: '${line}'
 Before: 'Lorem îpsûm 1 2 3   '
 After : 'Lorem îpsûm 1 2 3   ' (LANG = en_US.UTF-8)
 ```
 * Throughput speed: `8 MB/sec`
-* Invocation speed: `6579 ops/sec (0.15 millisec)`
+* Invocation speed: `7576 ops/sec (0.13 millisec)`
 

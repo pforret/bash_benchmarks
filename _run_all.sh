@@ -2,7 +2,6 @@
 ./benchmark.sh chars
 ./benchmark.sh copy
 ./benchmark.sh epoch
-./benchmark.sh gtr
 ./benchmark.sh hash
 ./benchmark.sh lowercase
 ./benchmark.sh romanize
